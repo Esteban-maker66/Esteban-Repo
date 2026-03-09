@@ -7,7 +7,9 @@ const loader = document.getElementById('loader');
 
 async function obtenerRecursos() {
     loader.classList.remove('hidden');
-    
+    console.log("¡Intentando conectar con el Arrecife!");
+    loader.classList.remove('hidden');
+     
     // Aquí es donde haremos la consulta real a la tabla
     let { data: recursos, error } = await supabaseClient
         .from('recursos')
@@ -36,6 +38,4 @@ function renderizar(lista) {
         grid.appendChild(card);
     });
 }
-
-// Iniciar carga
-// obtenerRecursos(); 
+obtenerRecursos(); 
