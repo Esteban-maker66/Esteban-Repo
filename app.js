@@ -9,7 +9,7 @@ async function obtenerRecursos() {
     loader.classList.remove('hidden');
     
     // Aquí es donde haremos la consulta real a tu tabla
-    let { data: recursos, error } = await supabase
+    let { data: recursos, error } = await supabaseClient
         .from('recursos')
         .select('*');
 
