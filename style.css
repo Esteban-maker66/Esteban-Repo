@@ -1,0 +1,68 @@
+:root {
+    --azul-mar: #005f73;
+    --azul-claro: #94d2bd;
+    --blanco: #ffffff;
+    --gris-fondo: #f8f9fa;
+    --texto: #222222;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--gris-fondo);
+    color: var(--texto);
+    padding-bottom: 70px; /* Para evitar que el contenido quede oculto detrás de la barra de navegación */
+}
+
+header {
+    background-color: var(--azul-mar);
+    color: white;
+    padding: 20px;
+    text-align: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.search-container { margin-top: 10px; }
+#busqueda {
+    width: 90%;
+    padding: 10px;
+    border-radius: 20px;
+    border: none;
+    font-size: 1rem;
+}
+
+.grid-layout {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 15px;
+    padding: 20px;
+}
+
+.libro-card {
+    background: white;
+    border-radius: 12px;
+    padding: 15px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform 0.2s;
+}
+
+.libro-card:active { transform: scale(0.95); } /* Feedback al tocar */
+
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background: white;
+    display: flex;
+    justify-content: space-around;
+    padding: 15px;
+    border-top: 1px solid #ddd;
+}
+
+.hidden { display: none; }

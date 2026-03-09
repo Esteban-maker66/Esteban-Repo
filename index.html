@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arrecife Digital</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Arrecife Digital</h1>
+        <div class="search-container">
+            <input type="text" id="busqueda" placeholder="Buscar libro o recurso...">
+        </div>
+    </header>
+
+    <main id="main-container">
+        <div id="loader">Cargando recursos...</div>
+        <div id="grid-recursos" class="grid-layout"></div>
+    </main>
+
+    <nav class="bottom-navi">
+        <button onclick="location.reload()">Inicio</button>
+        <button id="btn-categorias">Categorías</button>
+        <button id="btn-Estante">Mi Estante</button>
+        <button id="btn-Perfil">Perfil</button>
+        <button id="btn-admin">panel de administrador</button>
+    </nav>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="app.js"></script>
+</body>
+</html>
