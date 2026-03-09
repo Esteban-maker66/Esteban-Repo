@@ -8,7 +8,7 @@ const loader = document.getElementById('loader');
 async function obtenerRecursos() {
     loader.classList.remove('hidden');
     
-    // Aquí es donde haremos la consulta real a tu tabla
+    // Aquí es donde haremos la consulta real a la tabla
     let { data: recursos, error } = await supabaseClient
         .from('recursos')
         .select('*');
