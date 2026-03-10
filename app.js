@@ -5,9 +5,11 @@ const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
 const grid = document.getElementById('grid-recursos');
 const loader = document.getElementById('loader');
 
+let todosLosRecursos = [];
+
 async function obtenerRecursos() {
     loader.classList.remove('hidden');
-    console.log("¡Intentando conectar con el Arrecife!");
+   
     loader.classList.remove('hidden');
      
     // Aquí es donde haremos la consulta real a la tabla
@@ -21,9 +23,21 @@ async function obtenerRecursos() {
         console.error('Error:', error);
         return;
     }
-
-    renderizar(recursos);
+    
+    todosLosRecursos = recursos; // Guarda la "copia" original
+    renderizar(todosLosRecursos);
 }
+
+document.getElementById('busqueda').addEventListener('input', (e) => {
+    const termino = e.target.value.toLowerCase();
+    
+    const filtrados = todosLosRecursos.filter(item => 
+        item.titulo.toLowerCase().includes(termino) || 
+        item.categoria.toLowerCase().includes(termino)
+    );
+    
+    renderizar(filtrados); // Dibuja solo los que coinciden
+});
 
 function renderizar(lista) {
     grid.innerHTML = '';

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Administración</title>
+</head>
+<body>
+    <h1>Panel de Administración</h1>
+    <form id="form-recurso">
+    <input type="text" id="titulo" placeholder="Título del libro" required>
+    <input type="text" id="categoria" placeholder="Materia (ej. Matemáticas)" required>
+    <input type="url" id="url" placeholder="Enlace de descarga (Drive/PDF)" required>
+    <button type="submit" id="btn-guardar">Publicar recurso</button>
+</form>
+<div id="mensaje"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script> src="admin.js"</script>
+</body>
+</html>
