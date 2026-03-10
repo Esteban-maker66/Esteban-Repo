@@ -8,11 +8,9 @@ const loader = document.getElementById('loader');
 let todosLosRecursos = [];
 
 async function obtenerRecursos() {
-    loader.classList.remove('hidden');
-   
+    // Evitamos doble llamada al loader
     loader.classList.remove('hidden');
      
-    // Aquí es donde haremos la consulta real a la tabla
     let { data: recursos, error } = await supabaseClient
         .from('recursos')
         .select('*');
@@ -21,35 +19,62 @@ async function obtenerRecursos() {
 
     if (error) {
         console.error('Error:', error);
+        // Si hay error, avisamos al usuario en el grid
+        grid.innerHTML = '<p style="color: red;">Error al conectar con la biblioteca</p>';
         return;
     }
     
-    todosLosRecursos = recursos; // Guarda la "copia" original
+    todosLosRecursos = recursos; 
     renderizar(todosLosRecursos);
 }
 
-document.getElementById('busqueda').addEventListener('input', (e) => {
-    const termino = e.target.value.toLowerCase();
-    
-    const filtrados = todosLosRecursos.filter(item => 
-        item.titulo.toLowerCase().includes(termino) || 
-        item.categoria.toLowerCase().includes(termino)
-    );
-    
-    renderizar(filtrados); // Dibuja solo los que coinciden
-});
+// Escuchador para el buscador (ID: busqueda)
+const inputBusqueda = document.getElementById('busqueda');
+if(inputBusqueda) {
+    inputBusqueda.addEventListener('input', (e) => {
+        const termino = e.target.value.toLowerCase();
+        
+        const filtrados = todosLosRecursos.filter(item => 
+            item.titulo.toLowerCase().includes(termino) || 
+            item.categoria.toLowerCase().includes(termino)
+        );
+        
+        renderizar(filtrados);
+    });
+}
 
 function renderizar(lista) {
     grid.innerHTML = '';
+
+    // UX: Si la búsqueda no arroja resultados
+    if (lista.length === 0) {
+        grid.innerHTML = `
+            <div style="grid-column: 1/-1; text-align: center; padding: 20px;">
+                <p>No hay recursos que coincidan con tu búsqueda. 🌊</p>
+            </div>`;
+        return;
+    }
+
     lista.forEach(item => {
         const card = document.createElement('div');
         card.className = 'libro-card';
         card.innerHTML = `
             <strong>${item.titulo}</strong>
             <small>${item.categoria}</small>
-            <a href="${item.url}" class="btn-download">Abrir</a>
+            <a href="${item.url}" target="_blank" class="btn-download">Abrir</a>
         `;
         grid.appendChild(card);
     });
 }
-obtenerRecursos(); 
+
+const toggleSwitch = document.querySelector('#checkbox');
+
+toggleSwitch.addEventListener('change', (e) => {
+    if (e.target.checked) {
+        document.body.classList.add('dark-mode');
+    } else {
+        document.body.classList.remove('dark-mode');
+    }
+});
+
+obtenerRecursos();

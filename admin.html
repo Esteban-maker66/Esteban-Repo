@@ -4,18 +4,30 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Panel de Administración</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <h1>Panel de Administración</h1>
     <form id="form-recurso">
+
+    <label for="categoria">Selecciona la Materia:</label>
+<select id="categoria" required>
+    <option value="" disabled selected>Sin categoría</option>
+    <option value="Matemáticas">Matemáticas</option>
+    <option value="Lengua Española">Lengua Española</option>
+    <option value="Ciencias Naturales">Ciencias Naturales</option>
+    <option value="Ciencias Sociales">Ciencias Sociales</option>
+    <option value="Inglés">Inglés</option>
+    <option value="Formación Humana">Formación Humana</option>
+    </select>
+
     <input type="text" id="titulo" placeholder="Título del libro" required>
-    <input type="text" id="categoria" placeholder="Materia (ej. Matemáticas)" required>
-    <input type="url" id="url" placeholder="Enlace de descarga (Drive/PDF)" required>
+    <input type="url" id="url" placeholder="Enlace de descarga (Drive/PDF/enlace)" required>
     <button type="submit" id="btn-guardar">Publicar recurso</button>
 </form>
 <div id="mensaje"></div>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script> src="admin.js"</script>
+    <script src="./admin.js?v=1"></script>
 </body>
 </html>

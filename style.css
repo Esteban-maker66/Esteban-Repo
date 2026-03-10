@@ -1,16 +1,24 @@
 :root {
-    --azul-mar: #005f73;
+    --azul-mar: #0800ffca;
     --azul-claro: #94d2bd;
     --blanco: #ffffff;
-    --gris-fondo: #f8f9fa;
+    --card-bg: #f8f9fa;
     --texto: #222222;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
+body.dark-mode {
+    --bg-color: #282828;
+    --text-color: #e0e0e0;
+    --card-bg: #1e1e1e;
+    --texto: #ffffff;
+        --color-primario: #ffffff00;
+}
+
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: var(--gris-fondo);
+    background-color: var(--card-bg);
     color: var(--texto);
     padding-bottom: 70px; /* Para evitar que el contenido quede oculto detrás de la barra de navegación */
 }
@@ -42,10 +50,10 @@ header {
 }
 
 .libro-card {
-    background: white;
+    background-color: var(--card-bg);
     border-radius: 12px;
     padding: 15px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    box-shadow: 0 7px 18px rgba(0, 0, 0, 0.142);
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -64,5 +72,89 @@ header {
     padding: 15px;
     border-top: 1px solid #ddd;
 }
+/* Contenedor del switch */
+.theme-switch-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    justify-content: flex-end;
+    padding: 10px;
+}
+
+.theme-switch {
+    display: inline-block;
+    height: 26px;
+    position: relative;
+    width: 50px;
+}
+
+.theme-switch input { display: none; }
+
+.slider {
+    background-color: #0800ffca;
+    bottom: 0;
+    cursor: pointer;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    transition: .4s;
+}
+
+.slider:before {
+    background-color: #ffffff;
+    bottom: 4px;
+    content: "";
+    height: 15px;
+    left: 2px;
+    position: absolute;
+    transition: .4s;
+    width: 16px;
+}
+
+/* Colores cuando está activo */
+input:checked + .slider { background-color: var(--color-primario); }
+input:checked + .slider:before { transform: translateX(26px); }
+
+/* Forma redondeada */
+.slider.round { border-radius: 34px; border: 2px solid #f8f8f8df; box-shadow: 0 0 8px #0000003e; }
+.slider.round:before { border-radius: 90%; }
 
 .hidden { display: none; }
+
+select {
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+    border: 2px solid var(--color-primario);
+    background-color: white;
+    font-family: inherit;
+    cursor: pointer;
+    outline: none;
+}
+
+select:focus {
+    border-color: var(--color-secundario);
+}
+.btn-download{
+    background-color: var(--azul-mar);
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background-color 0.3s;
+    text-decoration: none;
+    font-weight: bold;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: #6f6f6f 0px 1px 7px;
+    transition: 0.5s;
+}
+.btn-download:active {
+    background-color: #0800ffca;
+    transition: 0.7s;
+    transform: scale(0.95);
+}   
