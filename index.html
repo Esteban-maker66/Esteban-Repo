@@ -5,36 +5,38 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Arrecife Digital</title>
     <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
     <header>
-        <h1>Arrecife Digital</h1>
-        <div class="search-container">
-            <input type="text" id="busqueda" placeholder="Buscar libro o recurso...">
+        <div class="header-main">
+            <div class="header-left">
+                <img src="assets/logopng.png" alt="Arrecife Digital Logo" class="logo">
+                <h1>Arrecife Digital</h1>
+            </div>
+            <div class="header-center">
+                <div class="search-container">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" id="busqueda" placeholder="Buscar libro o recurso...">
+                </div>
+            </div>
+            <div class="header-right">
+                <nav class="top-nav">
+                    <button id="btn-inicio" onclick="location.reload()"><i class="fas fa-home"></i> Inicio</button>
+                    <button id="btn-categorias" onclick="window.location.href='categorias.html'"><i class="fas fa-list"></i> Categorías</button>
+                    <button id="btn-Estante" onclick="window.location.href='estante.html'"><i class="fas fa-bookmark"></i> Mi Estante</button>
+                    <button id="btn-Perfil" onclick="window.location.href='perfil.html'"><i class="fas fa-user"></i> Perfil</button>
+                    <button id="btn-admin" onclick="window.location.href='admin.html'"><i class="fas fa-cog"></i> Admin</button>
+                </nav>
+            </div>
         </div>
     </header>
 
     <main id="main-container">
-        <div id="loader">Cargando recursos...</div>
+        <div id="loader">Cargando...</div>
         <div id="grid-recursos" class="grid-layout"></div>
     </main>
-
-    <nav class="bottom-navi">
-        <button id="btn-inicio" onclick="location.reload()">Inicio</button>
-        <button id="btn-categorias">Categorías</button>
-        <button id="btn-Estante">Mi Estante</button>
-        <button id="btn-Perfil">Perfil</button>
-        <button id="btn-admin" onclick="window.location.href='admin.html'">panel de administrador</button>
-
-        <div class="theme-switch-wrapper">
-    <span></span>
-    <label class="theme-switch" for="checkbox">
-        <input type="checkbox" id="checkbox" />
-        <div class="slider round"></div>
-    </label>
-    <span></span>
-</div>
-    </nav>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="app.js"></script>

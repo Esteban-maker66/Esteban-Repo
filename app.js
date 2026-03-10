@@ -7,6 +7,48 @@ const loader = document.getElementById('loader');
 
 let todosLosRecursos = [];
 
+// Initialize dark mode on page load
+function initializeDarkMode() {
+    const savedTheme = localStorage.getItem('theme');
+    const toggleSwitch = document.querySelector('#checkbox');
+
+    if (savedTheme === 'dark') {
+        document.body.classList.add('dark-mode');
+        if (toggleSwitch) {
+            toggleSwitch.checked = true;
+        }
+    } else {
+        document.body.classList.remove('dark-mode');
+        if (toggleSwitch) {
+            toggleSwitch.checked = false;
+        }
+    }
+}
+
+// Call initialize on page load
+document.addEventListener('DOMContentLoaded', initializeDarkMode);
+
+async function obtenerRecursos() {
+    // Evitamos doble llamada al loader
+    loader.classList.remove('hidden');
+     
+    let { data: recursos, error } = await supabaseClient
+        .from('recursos')
+        .select('*');
+
+    loader.classList.add('hidden');
+
+    if (error) {
+        console.error('Error:', error);
+        // Si hay error, avisamos al usuario en el grid
+        grid.innerHTML = '<p style="color: red;">Error al conectar con la biblioteca</p>';
+        return;
+    }
+    
+    todosLosRecursos = recursos; 
+    renderizar(todosLosRecursos);
+}
+
 async function obtenerRecursos() {
     // Evitamos doble llamada al loader
     loader.classList.remove('hidden');
@@ -69,12 +111,16 @@ function renderizar(lista) {
 
 const toggleSwitch = document.querySelector('#checkbox');
 
-toggleSwitch.addEventListener('change', (e) => {
-    if (e.target.checked) {
-        document.body.classList.add('dark-mode');
-    } else {
-        document.body.classList.remove('dark-mode');
-    }
-});
+if (toggleSwitch) {
+    toggleSwitch.addEventListener('change', (e) => {
+        if (e.target.checked) {
+            document.body.classList.add('dark-mode');
+            localStorage.setItem('theme', 'dark');
+        } else {
+            document.body.classList.remove('dark-mode');
+            localStorage.setItem('theme', 'light');
+        }
+    });
+}
 
 obtenerRecursos();

@@ -5,27 +5,56 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Panel de Administración</title>
     <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-    <h1>Panel de Administración</h1>
-    <form id="form-recurso">
+    <header class="admin-header">
+        <h1><i class="fas fa-cog"></i> Panel de Administración</h1>
+        <button onclick="window.location.href='index.html'" class="btn-back">
+            <i class="fas fa-arrow-left"></i> Volver al Inicio
+        </button>
+    </header>
 
-    <label for="categoria">Selecciona la Materia:</label>
-<select id="categoria" required>
-    <option value="" disabled selected>Sin categoría</option>
-    <option value="Matemáticas">Matemáticas</option>
-    <option value="Lengua Española">Lengua Española</option>
-    <option value="Ciencias Naturales">Ciencias Naturales</option>
-    <option value="Ciencias Sociales">Ciencias Sociales</option>
-    <option value="Inglés">Inglés</option>
-    <option value="Formación Humana">Formación Humana</option>
-    </select>
+    <main class="admin-main">
+        <div class="config-section">
+            <h2>Configuración del Sistema</h2>
+            <div class="config-item">
+            </div>
+            <div class="config-item">
+                <label>Tema:</label>
+                <div class="theme-switch-wrapper">
+                    <span class="theme-label">Modo Oscuro</span>
+                    <label class="theme-switch" for="checkbox">
+                        <input type="checkbox" id="checkbox" />
+                        <div class="slider round"></div>
+                    </label>
+                </div>
+            </div>
+        </div>
+        <h2 class="New-resources">Gestión de Nuevos Recursos</h2>
+        <div class="form-section">
+            <h2>+ Agregar Nuevo Recurso</h2>
+            <form id="form-recurso">
+                <label for="categoria">Selecciona la Materia:</label>
+                <select id="categoria" required>
+                    <option value="" disabled selected>Sin categoría</option>
+                    <option value="Matemáticas">Matemáticas</option>
+                    <option value="Lengua Española">Lengua Española</option>
+                    <option value="Ciencias Naturales">Ciencias Naturales</option>
+                    <option value="Ciencias Sociales">Ciencias Sociales</option>
+                    <option value="Inglés">Inglés</option>
+                    <option value="Formación Humana">Formación Humana</option>
+                </select>
 
-    <input type="text" id="titulo" placeholder="Título del libro" required>
-    <input type="url" id="url" placeholder="Enlace de descarga (Drive/PDF/enlace)" required>
-    <button type="submit" id="btn-guardar">Publicar recurso</button>
-</form>
-<div id="mensaje"></div>
+                <input type="text" id="titulo" placeholder="Título del libro" required>
+                <input type="url" id="url" placeholder="Fuente (Drive/PDF/enlace)" required>
+                <button type="submit" id="btn-guardar">Publicar recurso</button>
+            </form>
+        </div>
+
+        <div id="mensaje"></div>
+    </main>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="./admin.js?v=1"></script>
