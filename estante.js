@@ -13,7 +13,6 @@ async function cargarMiEstante() {
         return;
     }
 
-    // 1. Obtener los IDs de los favoritos de este usuario
     const { data: favoritos, error: errFav } = await supabaseClient
         .from('favoritos')
         .select('recurso_id')
