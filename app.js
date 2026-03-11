@@ -6,6 +6,7 @@ const grid = document.getElementById('grid-recursos');
 const loader = document.getElementById('loader');
 
 let todosLosRecursos = [];
+let favoritosSet = new Set(); // mantiene ids guardados por el usuario
 
 // Initialize dark mode on page load
 function initializeDarkMode() {
@@ -28,25 +29,18 @@ function initializeDarkMode() {
 // Call initialize on page load
 document.addEventListener('DOMContentLoaded', initializeDarkMode);
 
-async function obtenerRecursos() {
-    // Evitamos doble llamada al loader
-    loader.classList.remove('hidden');
-     
-    let { data: recursos, error } = await supabaseClient
-        .from('recursos')
-        .select('*');
+// obtiene la lista de recursos guardados del usuario y llena el set
+async function obtenerFavoritos() {
+    const userId = localStorage.getItem('arrecife_session_id');
+    if (!userId) return;
+    const { data, error } = await supabaseClient
+        .from('favoritos')
+        .select('recurso_id')
+        .eq('user_id', userId);
 
-    loader.classList.add('hidden');
-
-    if (error) {
-        console.error('Error:', error);
-        // Si hay error, avisamos al usuario en el grid
-        grid.innerHTML = '<p style="color: red;">Error al conectar con la biblioteca</p>';
-        return;
+    if (!error && data) {
+        favoritosSet = new Set(data.map(f => f.recurso_id));
     }
-    
-    todosLosRecursos = recursos; 
-    renderizar(todosLosRecursos);
 }
 
 async function obtenerRecursos() {
@@ -67,6 +61,7 @@ async function obtenerRecursos() {
     }
     
     todosLosRecursos = recursos; 
+    await obtenerFavoritos();
     renderizar(todosLosRecursos);
 }
 
@@ -92,7 +87,7 @@ function renderizar(lista) {
     if (lista.length === 0) {
         grid.innerHTML = `
             <div style="grid-column: 1/-1; text-align: center; padding: 20px;">
-                <p>No hay recursos que coincidan con tu búsqueda... 🌊</p>
+                <p class="no-results">No hay recursos que coincidan con tu búsqueda... 🌊</p>
             </div>`;
         return;
     }
@@ -238,12 +233,15 @@ function renderizar(lista) {
     lista.forEach(item => {
         const card = document.createElement('div');
         card.className = 'libro-card';
-        // Usamos template strings con cuidado
+        // determinar si el recurso ya está guardado
+        const saved = favoritosSet.has(item.id);
+        const iconClass = saved ? 'fas' : 'far';
+        const btnClass = saved ? 'btn-save saved' : 'btn-save';
         card.innerHTML = `
             <div class="card-header">
                 <span class="categoria-tag">${item.categoria || 'Sin categoría'}</span>
-                <button class="btn-save" onclick="guardarEnEstante(${item.id}, this)" title="Guardar en mi estante">
-                    <i class="far fa-bookmark"></i>
+                <button class="${btnClass}" onclick="guardarEnEstante(${item.id}, this)" title="Guardar en mi estante">
+                    <i class="${iconClass} fa-bookmark"></i>
                 </button>
             </div>
             <strong>${item.titulo}</strong>
@@ -268,12 +266,38 @@ async function guardarEnEstante(recursoId, boton) {
         localStorage.setItem('arrecife_session_id', userId);
     }
 
+    // si ya está guardado, lo eliminamos en lugar de insertarlo
+    if (favoritosSet.has(recursoId)) {
+        const { error } = await supabaseClient
+            .from('favoritos')
+            .delete()
+            .eq('user_id', userId)
+            .eq('recurso_id', recursoId);
+
+        if (error) {
+            console.error('Error al eliminar:', error);
+            alert('No se pudo quitar del estante.');
+        } else {
+            // actualizar UI
+            favoritosSet.delete(recursoId);
+            boton.classList.remove('saved');
+            const icon = boton.querySelector('i');
+            if (icon) icon.classList.replace('fas', 'far');
+            alert('Recurso eliminado de Mi Estante 🗑️');
+        }
+        return;
+    }
+
     const { data, error } = await supabaseClient
         .from('favoritos')
         .insert([{ user_id: userId, recurso_id: recursoId }]);
 
     if (error) {
         if (error.code === '23505') {
+            favoritosSet.add(recursoId);
+            const icon = boton.querySelector('i');
+            if (icon) icon.classList.replace('far', 'fas');
+            boton.classList.add('saved');
             alert("¡Este libro ya está en tu estante! ✨");
         } else {
             console.error("Error al guardar:", error);
@@ -282,8 +306,9 @@ async function guardarEnEstante(recursoId, boton) {
     } else {
         // Cambiamos el icono para dar feedback visual
         const icon = boton.querySelector('i');
-        icon.classList.replace('far', 'fas'); // De borde a relleno
+        if (icon) icon.classList.replace('far', 'fas'); // De borde a relleno
         boton.classList.add('saved');
+        favoritosSet.add(recursoId);
         alert("¡Guardado en Mi Estante! 📚");
     }
 }

@@ -19,7 +19,7 @@ async function cargarMiEstante() {
         .eq('user_id', userId);
 
     if (errFav || favoritos.length === 0) {
-        grid.innerHTML = "<p>Tu estante está vacío. 📚</p>";
+        grid.innerHTML = "<p class='estante-vacio'>Tu estante está vacío... 📚</p>";
         loader.classList.add('hidden');
         return;
     }

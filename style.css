@@ -64,7 +64,9 @@ header {
 .logo {
     height: 40px;
     width: auto;
-    transition: height 0.1s ease;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    object-fit: contain;
 }
 
 header h1 {
@@ -533,7 +535,12 @@ main {
 }
 
 .libro-card:active {
-    transform: scale(0.98);
+    transform: scale(0.9);
+}
+
+.libro-card:hover {
+    box-shadow: 0 6px 25px rgba(76, 76, 76, 0.365);
+    transform: scale(1.01);
 }
 
 .libro-card > strong {
@@ -581,29 +588,11 @@ main {
     display: none;
 }
 
-.header-scrolled {
-    padding: 0.5rem 1rem;
-    background: rgba(37, 99, 235, 0.95);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.4);
-}
-
 .header-scrolled .logo {
-    height: 35px;
+    height: 25px;
 }
 
 /* Animations */
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
 
 .libro-card {
     animation: fadeIn 0.5s ease-out;
@@ -615,6 +604,8 @@ main {
     padding: 2rem;
     color: var(--text-muted);
     font-size: 1.5rem;
+    transform: translateY(200px);
+    font-weight: bold;
 }
 
 input:checked + .slider {
@@ -659,7 +650,7 @@ select {
 }
 
 .libro-card {
-    animation: fadeIn 0.5s ease-out;
+    animation: fadeIn 0.5s ease-in;
 }
 
 /* Loading animation */
@@ -679,18 +670,21 @@ select {
     .header-main {
         grid-template-columns: 1fr;
         gap: 1rem;
+        transition: all 0.3s ease;
     }
 
     .header-left {
         justify-content: center;
+            gap: 0.5rem;
     }
 
     .header-center {
         order: -1;
+            gap: 0.5rem;
     }
 
     .header-right {
-        justify-content: flex-end; /* keep items at right edge on tablets */
+        justify-content: flex-end;
     }
 
     header h1 {
@@ -733,7 +727,7 @@ select {
     }
 
     .dropdown-content a {
-        padding: 0.6rem 0.8rem;
+        padding: 0.8rem 1rem;
         font-size: 0.8rem;
     }
 
@@ -747,6 +741,7 @@ select {
 @media (max-width: 480px) {
     header {
         padding: 0.75rem 1rem;
+        border-radius: 0 0 8px 8px;
     }
 
     .header-main {
@@ -754,12 +749,11 @@ select {
     }
 
     header h1 {
-        font-size: 0.2rem;
-
+        font-size: 1px;
     }
 
     .logo {
-        height: 40px;
+        height: 25px;
     }
 
     .top-nav button {
@@ -808,13 +802,16 @@ select {
 }
 
 .libro-card .categoria-tag {
-    background: var(--primary);
-    color: white;
-    padding: 0.25rem 0.75rem;
-    border-radius: 12px;
-    font-size: 0.75rem;
-    font-weight: 500;
+    background: var(--border);
+    color: rgba(0, 0, 0, 0.64);
+    padding: 0.15rem 0.55rem;
+    border-radius: 5px;
+    font-size: 0.62rem;
+    font-weight: bold;
     text-transform: capitalize;
+    width: fit-content;
+    border: 1px solid rgba(128, 128, 128, 0.231);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .btn-remove {
@@ -860,6 +857,10 @@ select {
     margin-left: 1rem;
 }
 
+.mobile-search-btn {
+    display: none;
+}
+
 .hamburger-line {
     width: 25px;
     height: 3px;
@@ -870,7 +871,7 @@ select {
 }
 
 .hamburger-btn.active .hamburger-line:nth-child(1) {
-    transform: rotate(45deg) translate(5px, 5px);
+    transform: translateY(0.4rem) 
 }
 
 .hamburger-btn.active .hamburger-line:nth-child(2) {
@@ -878,7 +879,7 @@ select {
 }
 
 .hamburger-btn.active .hamburger-line:nth-child(3) {
-    transform: rotate(-45deg) translate(7px, -6px);
+    transform:  translateY(-0.4rem)
 }
 
 .mobile-menu-overlay {
@@ -903,14 +904,18 @@ select {
     position: fixed;
     top: 0;
     right: 0;
-    width: 280px;
-    height: 100%;
+    width: 240px;
+    height: 85%;
     background: var(--surface);
     box-shadow: -4px 0 20px rgba(0, 0, 0, 0.3);
     transform: translateX(100%);
-    transition: transform 0.3s ease;
+    transition: 0.3s ease;
     padding: 2rem 0;
     overflow-y: auto;
+    z-index: 1001;
+    border-radius: 0 0 0 32px;
+    border: 1px solid var(--border);
+    
 }
 
 .mobile-menu-overlay.active .mobile-menu {
@@ -927,12 +932,13 @@ select {
     color: var(--text);
     cursor: pointer;
     padding: 0.5rem;
-    border-radius: 50%;
+    border-radius: 60%;
     transition: 0.2s ease;
 }
 
-.mobile-menu-close:hover {
-    background: var(--border);
+.mobile-menu-close:active {
+    transform: scale(0.7);
+
 }
 
 .mobile-nav {
@@ -952,11 +958,7 @@ select {
     transition: 0.2s ease;
     font-weight: 500;
     margin-bottom: 0.5rem;
-}
 
-.mobile-nav a:hover,
-.mobile-dropdown-btn:hover {
-    background: var(--background);
 }
 
 .mobile-dropdown-content {
@@ -1059,11 +1061,12 @@ select {
         cursor: pointer;
         padding: 0.5rem;
         border-radius: 50%;
-        transition: background 0.2s ease;
+        transition: 0.2s ease;
+        color: var(--surface);
     }
 
-    .mobile-search-btn:hover {
-        background: var(--border);
+    .mobile-search-btn:active {
+        transform: scale(0.7);
     }
 
     /* Admin header responsive */
@@ -1080,7 +1083,41 @@ select {
         padding: 0.5rem 0.8rem;
     }
 }
+.fa-search::before{
+    color:whitesmoke;
+}
+/* Dark mode adjustments for mobile categories button */
+body.dark-mode .mobile-dropdown-btn{
+    background: none;
+    border: none;
+    color: whitesmoke;
+}
+body.dark-mode .mobile-nav a {
+    color: whitesmoke;
+}
+
+/* ensure icons inside mobile dropdown inherit color */
+.mobile-dropdown-btn i {
+    color: inherit;
+}
 
 
+header.search-expanded {
+    border-radius: 0 0 18px 18px;
+}
 
-
+.estante-vacio {
+    position: absolute;
+    color: var(--text-muted);
+    font-size: 1.2rem;
+    padding: 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-weight: bolder;
+    font-size: 1.2rem;
+}

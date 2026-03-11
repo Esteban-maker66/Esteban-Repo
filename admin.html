@@ -10,15 +10,15 @@
 </head>
 <body>
     <header class="admin-header">
-        <h1><i class="fas fa-cog"></i> Panel de Administración</h1>
+        <h1><i class="fas fa-cog"></i> Panel Administración</h1>
         <button onclick="window.location.href='index.html'" class="btn-back">
             <i class="fas fa-arrow-left"></i> Volver al Inicio
         </button>
     </header>
 
     <main class="admin-main">
+        <h2>Configuración del Sistema</h2>
         <div class="config-section">
-            <h2>Configuración del Sistema</h2>
             <div class="config-item">
             </div>
             <div class="config-item">
@@ -49,7 +49,8 @@
 
                 <input type="text" id="titulo" placeholder="Título del libro" required>
                 <input type="url" id="url" placeholder="Fuente (Drive/PDF/enlace)" required>
-                <button type="submit" id="btn-guardar">Publicar recurso</button>
+                <button type="submit" id="btn-guardar">+ Publicar recurso</button>
+                <p class="form-help">Los libros se publicarán una vez que sean aprobados por un administrador.</p>
             </form>
         </div>
 
