@@ -86,3 +86,53 @@ if (toggleSwitch) {
         }
     });
 }
+// Mobile menu functionality for admin
+document.addEventListener("DOMContentLoaded", function() {
+    const hamburgerBtn = document.getElementById("admin-hamburger-btn");
+    const mobileMenuOverlay = document.getElementById("admin-mobile-menu-overlay");
+    const mobileMenuClose = document.getElementById("admin-mobile-menu-close");
+
+    if (hamburgerBtn && mobileMenuOverlay) {
+        // Open mobile menu
+        hamburgerBtn.addEventListener("click", function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            mobileMenuOverlay.classList.add("active");
+            hamburgerBtn.classList.add("active");
+        });
+
+        // Close mobile menu
+        if (mobileMenuClose) {
+            mobileMenuClose.addEventListener("click", function() {
+                closeAdminMobileMenu();
+            });
+        }
+
+        // Close on overlay click
+        mobileMenuOverlay.addEventListener("click", function(e) {
+            if (e.target === mobileMenuOverlay) {
+                closeAdminMobileMenu();
+            }
+        });
+
+        // Close on escape key
+        document.addEventListener("keydown", function(e) {
+            if (e.key === "Escape") {
+                closeAdminMobileMenu();
+            }
+        });
+    }
+});
+
+function closeAdminMobileMenu() {
+    const mobileMenuOverlay = document.getElementById("admin-mobile-menu-overlay");
+    const hamburgerBtn = document.getElementById("admin-hamburger-btn");
+    
+    if (mobileMenuOverlay) {
+        mobileMenuOverlay.classList.remove("active");
+    }
+    if (hamburgerBtn) {
+        hamburgerBtn.classList.remove("active");
+    }
+}
+

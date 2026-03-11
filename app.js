@@ -92,7 +92,7 @@ function renderizar(lista) {
     if (lista.length === 0) {
         grid.innerHTML = `
             <div style="grid-column: 1/-1; text-align: center; padding: 20px;">
-                <p>No hay recursos que coincidan con tu búsqueda. 🌊</p>
+                <p>No hay recursos que coincidan con tu búsqueda... 🌊</p>
             </div>`;
         return;
     }
@@ -123,4 +123,234 @@ if (toggleSwitch) {
     });
 }
 
+window.onscroll = function() {
+    const header = document.querySelector("header");
+    if (window.pageYOffset > 50) {
+        header.classList.add("header-scrolled");
+    } else {
+        header.classList.remove("header-scrolled");
+    }
+};
+
+function filtrarPorCategoria(categoria) {
+    const inputBusqueda = document.getElementById('busqueda');
+
+    if (categoria === 'todas') {
+        // Mostrar todos los recursos
+        inputBusqueda.value = '';
+        renderizar(todosLosRecursos);
+    } else {
+        // Mapear las categorías del dropdown a los nombres en la base de datos
+        const categoriaMap = {
+            'matematicas': 'Matemáticas',
+            'fisica': 'Física',
+            'quimica': 'Química',
+            'biologia': 'Biología',
+            'historia': 'Historia',
+            'geografia': 'Geografía',
+            'literatura': 'Literatura',
+            'ingles': 'Inglés',
+            'filosofia': 'Filosofía',
+            'arte': 'Arte',
+            'musica': 'Música',
+            'educacion-fisica': 'Educación Física'
+        };
+
+        const nombreCategoria = categoriaMap[categoria] || categoria;
+
+        // Filtrar por categoría exacta
+        const filtrados = todosLosRecursos.filter(item =>
+            item.categoria.toLowerCase() === nombreCategoria.toLowerCase()
+        );
+
+        // Actualizar el campo de búsqueda para mostrar la categoría seleccionada
+        inputBusqueda.value = nombreCategoria;
+
+        renderizar(filtrados);
+    }
+
+    // Scroll suave hacia los resultados
+    document.getElementById('grid-recursos').scrollIntoView({ behavior: 'smooth' });
+
+    // Cerrar el dropdown después de seleccionar una categoría
+    const dropdown = document.querySelector('.dropdown');
+    if (dropdown) {
+        dropdown.classList.remove('active');
+    }
+}
+
+// Dropdown functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const dropdownBtn = document.getElementById('btn-categorias');
+    const dropdown = document.querySelector('.dropdown');
+
+    if (dropdownBtn && dropdown) {
+        dropdownBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            dropdown.classList.toggle('active');
+        });
+
+        document.addEventListener('click', function(e) {
+            if (!dropdown.contains(e.target)) {
+                dropdown.classList.remove('active');
+            }
+        });
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                dropdown.classList.remove('active');
+            }
+        });
+    }
+
+    // Mobile search toggle
+    const mobileSearchBtn = document.getElementById('mobile-search-btn');
+    const headerCenter = document.querySelector('.header-center');
+
+    if (mobileSearchBtn && headerCenter) {
+        mobileSearchBtn.addEventListener('click', function() {
+            headerCenter.classList.toggle('show-search');
+            // Focus on search input when shown
+            if (headerCenter.classList.contains('show-search')) {
+                const searchInput = document.getElementById('busqueda');
+                if (searchInput) {
+                    setTimeout(() => searchInput.focus(), 100);
+                }
+            }
+        });
+    }
+});
+
+function renderizar(lista) {
+    const grid = document.getElementById('grid-recursos');
+    const loader = document.getElementById('loader');
+    
+    if (!grid) return;
+    grid.innerHTML = '';
+
+    if (lista.length === 0) {
+        grid.innerHTML = `<p style="grid-column: 1/-1; text-align: center;">No se encontraron recursos. 🌊</p>`;
+        if (loader) loader.classList.add('hidden');
+        return;
+    }
+
+    lista.forEach(item => {
+        const card = document.createElement('div');
+        card.className = 'libro-card';
+        // Usamos template strings con cuidado
+        card.innerHTML = `
+            <div class="card-header">
+                <span class="categoria-tag">${item.categoria || 'Sin categoría'}</span>
+                <button class="btn-save" onclick="guardarEnEstante(${item.id}, this)" title="Guardar en mi estante">
+                    <i class="far fa-bookmark"></i>
+                </button>
+            </div>
+            <strong>${item.titulo}</strong>
+            <div class="card-footer">
+                <a href="${item.url}" target="_blank" class="btn-download">
+                    <i class="fas fa-external-link-alt"></i> Abrir
+                </a>
+            </div>
+        `;
+        grid.appendChild(card);
+    });
+
+    // IMPORTANTE: Ocultar el loader después de renderizar
+    if (loader) loader.classList.add('hidden');
+}
+
+
+async function guardarEnEstante(recursoId, boton) {
+    let userId = localStorage.getItem('arrecife_session_id');
+    if (!userId) {
+        userId = 'user_' + Math.random().toString(36).substr(2, 9);
+        localStorage.setItem('arrecife_session_id', userId);
+    }
+
+    const { data, error } = await supabaseClient
+        .from('favoritos')
+        .insert([{ user_id: userId, recurso_id: recursoId }]);
+
+    if (error) {
+        if (error.code === '23505') {
+            alert("¡Este libro ya está en tu estante! ✨");
+        } else {
+            console.error("Error al guardar:", error);
+            alert("Hubo un problema al guardar...");
+        }
+    } else {
+        // Cambiamos el icono para dar feedback visual
+        const icon = boton.querySelector('i');
+        icon.classList.replace('far', 'fas'); // De borde a relleno
+        boton.classList.add('saved');
+        alert("¡Guardado en Mi Estante! 📚");
+    }
+}
+
 obtenerRecursos();
+// Mobile Menu Functionality
+document.addEventListener("DOMContentLoaded", function() {
+    const hamburgerBtn = document.getElementById("hamburger-btn");
+    const mobileMenuOverlay = document.getElementById("mobile-menu-overlay");
+    const mobileMenuClose = document.getElementById("mobile-menu-close");
+    const mobileCategoriesBtn = document.getElementById("mobile-categories-btn");
+    const mobileCategoriesContent = document.getElementById("mobile-categories-content");
+    const mobileDropdown = mobileCategoriesBtn ? mobileCategoriesBtn.closest(".mobile-dropdown") : null;
+
+    // Toggle hamburger menu
+    if (hamburgerBtn) {
+        hamburgerBtn.addEventListener("click", function() {
+            mobileMenuOverlay.classList.toggle("active");
+            hamburgerBtn.classList.toggle("active");
+        });
+    }
+
+    // Close mobile menu
+    if (mobileMenuClose) {
+        mobileMenuClose.addEventListener("click", closeMobileMenu);
+    }
+
+    // Close on overlay click
+    if (mobileMenuOverlay) {
+        mobileMenuOverlay.addEventListener("click", function(e) {
+            if (e.target === mobileMenuOverlay) {
+                closeMobileMenu();
+            }
+        });
+    }
+
+    // Mobile categories dropdown
+    if (mobileCategoriesBtn) {
+        mobileCategoriesBtn.addEventListener("click", function(e) {
+            e.preventDefault();
+            if (mobileDropdown) {
+                mobileDropdown.classList.toggle("active");
+            }
+        });
+    }
+
+    // Close on escape key
+    document.addEventListener("keydown", function(e) {
+        if (e.key === "Escape" && mobileMenuOverlay.classList.contains("active")) {
+            closeMobileMenu();
+        }
+    });
+});
+
+function closeMobileMenu() {
+    const mobileMenuOverlay = document.getElementById("mobile-menu-overlay");
+    const hamburgerBtn = document.getElementById("hamburger-btn");
+    const mobileDropdown = document.querySelector(".mobile-dropdown");
+
+    if (mobileMenuOverlay) {
+        mobileMenuOverlay.classList.remove("active");
+    }
+    if (hamburgerBtn) {
+        hamburgerBtn.classList.remove("active");
+    }
+    if (mobileDropdown) {
+        mobileDropdown.classList.remove("active");
+    }
+}
+

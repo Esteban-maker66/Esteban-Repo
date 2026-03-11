@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Estante - Arrecife Digital</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <header>
+        <div class="header-main">
+            <div class="header-left">
+                <h1><i class="fas fa-bookmark"></i>Mi Estante</h1>
+            </div>
+            <div class="header-right">
+                <button onclick="window.location.href='index.html'" class="btn-back">
+                    <i class="fas fa-arrow-left"></i> Volver al Inicio
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main id="main-container">
+        <div id="loader">Cargando tus libros...</div>
+        <div id="grid-recursos" class="grid-layout"></div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="estante.js"></script>
+</body>
+</html>
