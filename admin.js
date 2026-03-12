@@ -62,9 +62,9 @@ form.addEventListener('submit', async (e) => {
         .insert([nuevoLibro]);
 
     if (error) {
-        alert("Error al subir: " + error.message);
+        notificar("Error al subir: " + error.message);
     } else {
-        alert("¡Libro agregado con éxito!");
+        notificar("¡Libro agregado con éxito!");
         form.reset(); // Limpia el formulario para el siguiente libro
     }
     
@@ -136,3 +136,84 @@ function closeAdminMobileMenu() {
     }
 }
 
+const nuevoLibro = {
+    titulo: document.getElementById('titulo').value,
+    categoria: document.getElementById('categoria').value,
+    url: document.getElementById('url').value,
+    aprobado: true // soy el admin, asi que tengo el poder de aprobar al instante
+};
+
+// Función para cargar lo que está pendiente
+async function cargarPendientes() {
+    const contenedor = document.getElementById('lista-pendientes');
+    contenedor.innerHTML = '<p>Buscando recursos pendientes...</p>';
+
+    const { data, error } = await supabaseClient
+        .from('recursos')
+        .select('*')
+        .eq('aprobado', false); // Traemos solo lo no aprobado
+
+    if (error) {
+        notificar("Error al cargar pendientes", "error");
+        return;
+    }
+
+    if (data.length === 0) {
+        contenedor.innerHTML = '<p>No hay nada pendiente por ahora. ¡Todo limpio!</p>';
+        return;
+    }
+
+    contenedor.innerHTML = ''; // Limpiamos
+    data.forEach(recurso => {
+        const card = document.createElement('div');
+        card.className = 'libro-card pendiente';
+        card.innerHTML = `
+            <strong>${recurso.titulo}</strong>
+            <small>${recurso.categoria}</small>
+            <div class="admin-actions">
+                <button onclick="aprobarRecurso(${recurso.id})" class="btn-approve">
+                    <i class="fas fa-check"></i> Aprobar
+                </button>
+                <button onclick="eliminarRecurso(${recurso.id})" class="btn-delete">
+                    <i class="fas fa-trash"></i> Rechazar
+                </button>
+            </div>
+        `;
+        contenedor.appendChild(card);
+    });
+}
+
+// Función para aprobar (Update)
+async function aprobarRecurso(id) {
+    const { error } = await supabaseClient
+        .from('recursos')
+        .update({ aprobado: true })
+        .eq('id', id);
+
+    if (error) {
+        notificar("No se pudo aprobar", "error");
+    } else {
+        notificar("Recurso aprobado y visible", "success");
+        cargarPendientes(); // Recargamos la lista
+    }
+}
+
+// Función para eliminar/rechazar (Delete)
+async function eliminarRecurso(id) {
+    if(!confirm("¿Seguro que quieres rechazar y borrar este recurso?")) return;
+
+    const { error } = await supabaseClient
+        .from('recursos')
+        .delete()
+        .eq('id', id);
+
+    if (error) {
+        notificar("Error al eliminar", "error");
+    } else {
+        notificar("Recurso eliminado", "info");
+        cargarPendientes();
+    }
+}
+
+// Llamar al cargar la página
+document.addEventListener('DOMContentLoaded', cargarPendientes);

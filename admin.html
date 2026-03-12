@@ -10,7 +10,7 @@
 </head>
 <body>
     <header class="admin-header">
-        <h1><i class="fas fa-cog"></i> Panel Administración</h1>
+        <h1><i class="fas fa-cog"></i> Panel de control</h1>
         <button onclick="window.location.href='index.html'" class="btn-back">
             <i class="fas fa-arrow-left"></i> Volver al Inicio
         </button>
@@ -18,7 +18,7 @@
 
     <main class="admin-main">
         <h2>Configuración del Sistema</h2>
-        <div class="config-section">
+        <section class="config-section">
             <div class="config-item">
             </div>
             <div class="config-item">
@@ -31,9 +31,9 @@
                     </label>
                 </div>
             </div>
-        </div>
-        <h2 class="New-resources">Gestión de Nuevos Recursos</h2>
-        <div class="form-section">
+        </section>
+        <h2>Gestión de Nuevos Recursos</h2>
+        <section class="form-section">
             <h2>+ Agregar Nuevo Recurso</h2>
             <form id="form-recurso">
                 <label for="categoria">Selecciona la Materia:</label>
@@ -50,9 +50,15 @@
                 <input type="text" id="titulo" placeholder="Título del libro" required>
                 <input type="url" id="url" placeholder="Fuente (Drive/PDF/enlace)" required>
                 <button type="submit" id="btn-guardar">+ Publicar recurso</button>
-                <p class="form-help">Los libros se publicarán una vez que sean aprobados por un administrador.</p>
-            </form>
+                <section class="admin-section">
+    <h2><i class="fas fa-clock"></i> Recursos Pendientes de Aprobación</h2>
+    <div id="lista-pendientes" class="grid-layout">
         </div>
+</section>
+                <p class="form-help">Por moderacion de contenido, los recursos tienen un plazo de 24h para publicarse...</p>
+                <i class="fas fa-info-circle" id="form-help-icon"></i>
+            </form>
+        </section>
 
         <div id="mensaje"></div>
     </main>

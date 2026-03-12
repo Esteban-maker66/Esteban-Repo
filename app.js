@@ -83,15 +83,6 @@ if(inputBusqueda) {
 function renderizar(lista) {
     grid.innerHTML = '';
 
-    // UX: Si la búsqueda no arroja resultados
-    if (lista.length === 0) {
-        grid.innerHTML = `
-            <div style="grid-column: 1/-1; text-align: center; padding: 20px;">
-                <p class="no-results">No hay recursos que coincidan con tu búsqueda... 🌊</p>
-            </div>`;
-        return;
-    }
-
     lista.forEach(item => {
         const card = document.createElement('div');
         card.className = 'libro-card';
@@ -225,7 +216,7 @@ function renderizar(lista) {
     grid.innerHTML = '';
 
     if (lista.length === 0) {
-        grid.innerHTML = `<p style="grid-column: 1/-1; text-align: center;">No se encontraron recursos. 🌊</p>`;
+        grid.innerHTML = `<p class="not-found" style="grid-column: 1/-1; text-align: center;">No hay recursos que coincidan con tu búsqueda... 🌊</p>`;
         if (loader) loader.classList.add('hidden');
         return;
     }
@@ -276,14 +267,14 @@ async function guardarEnEstante(recursoId, boton) {
 
         if (error) {
             console.error('Error al eliminar:', error);
-            alert('No se pudo quitar del estante.');
+            notificar('No se pudo quitar del estante.');
         } else {
             // actualizar UI
             favoritosSet.delete(recursoId);
             boton.classList.remove('saved');
             const icon = boton.querySelector('i');
             if (icon) icon.classList.replace('fas', 'far');
-            alert('Recurso eliminado de Mi Estante 🗑️');
+            notificar('Recurso eliminado de Mi Estante 🗑️');
         }
         return;
     }
@@ -298,10 +289,10 @@ async function guardarEnEstante(recursoId, boton) {
             const icon = boton.querySelector('i');
             if (icon) icon.classList.replace('far', 'fas');
             boton.classList.add('saved');
-            alert("¡Este libro ya está en tu estante! ✨");
+            notificar("¡Este libro ya está en tu estante! ✨");
         } else {
             console.error("Error al guardar:", error);
-            alert("Hubo un problema al guardar...");
+            notificar("Hubo un problema al guardar...");
         }
     } else {
         // Cambiamos el icono para dar feedback visual
@@ -309,7 +300,7 @@ async function guardarEnEstante(recursoId, boton) {
         if (icon) icon.classList.replace('far', 'fas'); // De borde a relleno
         boton.classList.add('saved');
         favoritosSet.add(recursoId);
-        alert("¡Guardado en Mi Estante! 📚");
+        notificar("¡Guardado en Mi Estante! 📚");
     }
 }
 
@@ -344,7 +335,7 @@ document.addEventListener("DOMContentLoaded", function() {
             }
         });
     }
-
+    
     // Mobile categories dropdown
     if (mobileCategoriesBtn) {
         mobileCategoriesBtn.addEventListener("click", function(e) {
@@ -379,3 +370,25 @@ function closeMobileMenu() {
     }
 }
 
+function notificar(mensaje, tipo = 'info') {
+    const container = document.getElementById('toast-container');
+    const toast = document.createElement('div');
+    toast.className = `toast ${tipo}`;
+    
+    const icon = tipo === 'success' ? 'fa-check-circle' : 'fa-info-circle';
+    
+    toast.innerHTML = `
+        <i class="fas ${icon}"></i>
+        <span>${mensaje}</span>
+    `;
+    
+    container.appendChild(toast);
+
+    // Desaparece después de 5 segundos
+    setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateX(100%)';
+        toast.style.transition = 'all 0.3s ease';
+        setTimeout(() => toast.remove(), 500);
+    }, 5000);
+}

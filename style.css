@@ -160,6 +160,7 @@ header h1 {
     position: relative;
     display: inline-block;
     transform: scale(0.85);
+    z-index: 1000;
 }
 
 .dropdown-btn {
@@ -359,6 +360,7 @@ input:checked + .slider:before {
     display: flex;
     align-items: center;
     justify-content: center;
+    max-height: 1.6rem;
 }
 .btn-save:hover {
     background: var(--primary);
@@ -371,7 +373,7 @@ input:checked + .slider:before {
 .btn-save.saved {
     background: var(--accent);
     border-color: var(--accent);
-    color: white;
+    color: rgb(255, 208, 0);
 }
 
 .btn-back {
@@ -524,14 +526,15 @@ main {
 .libro-card {
     background: var(--surface);
     border-radius: 16px;
-    padding: 1.5rem;
+    padding: 0.8rem;
     box-shadow: 0 4px 20px var(--shadow);
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    min-height: 200px;
+    min-height: 240px;
     transition: all 0.3s ease;
     border: 1px solid var(--border);
+    max-width: fill-available;
 }
 
 .libro-card:active {
@@ -784,6 +787,7 @@ select {
 
 .libro-card {
     animation: fadeIn 0.5s ease-out;
+
 }
 
 /* Loading animation */
@@ -798,7 +802,8 @@ select {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 1rem;
+    margin-bottom: 10rem;
+
 }
 
 .libro-card .categoria-tag {
@@ -833,6 +838,7 @@ select {
     font-size: 1.1rem;
     font-weight: 600;
     color: var(--text);
+
 }
 
 
@@ -1011,6 +1017,9 @@ select {
         margin: 0;
     }
 
+    .mobile-menu {
+        width: 60%;
+    }
     .header-center {
         order: 3;
         grid-column: 1 / -1;
@@ -1120,4 +1129,82 @@ header.search-expanded {
     transform: translate(-50%, -50%);
     font-weight: bolder;
     font-size: 1.2rem;
+}
+.not-found {
+    text-align: center;
+    padding: 2rem;
+    color: var(--text-muted);
+    font-size: 1.2rem;
+    font-weight: bold;
+    transform: translateY(200px);
+}
+
+#toast-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 9998;
+}
+
+.toast {
+    background: var(--surface);
+    color: var(--text);
+    padding: 1rem 1.5rem;
+    border-radius: 12px;
+    margin-top: 10px;
+    box-shadow: 0 10px 15px var(--shadow);
+    border-left: 5px solid var(--primary);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    animation: slideIn 0.4s ease-out;
+    transition: all 0.3s ease;
+    min-width: 280px;
+}
+
+.toast.error { border-left-color: #ef4444; }
+.toast.success { border-left-color: #22c55e; }
+
+@keyframes slideIn {
+    from { transform: translateX(100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+.form-help{
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.5rem;
+    color: var(--text-muted);
+    font-size: 0.875rem;
+    margin-top: 0.5rem;
+    font-style: italic;
+}
+
+.admin-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.btn-approve {
+    background: #22c55e;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.btn-delete {
+    background: #ef4444;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.libro-card.pendiente {
+    border: 2px dashed var(--accent); /* Para diferenciar lo que no es público aún */
 }
