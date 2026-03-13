@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Perfil - Arrecife Digital</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <header class="admin-header">
+        <h1><i class="fas fa-user-circle"></i> Mi Perfil</h1>
+        <button onclick="window.location.href='index.html'" class="btn-back">
+            <i class="fas fa-arrow-left"></i> Inicio
+        </button>
+    </header>
+
+    <main class="form-section">
+        <div id="auth-logged-out" class="profile-card">
+            <i class="fab fa-google" style="font-size: 3rem; color: var(--primary);"></i>
+            <h2>Identifícate</h2>
+            <p>Inicia sesión con tu cuenta institucional o personal para guardar libros y colaborar.</p>
+            <button onclick="loginConGoogle()" class="btn-login-google">
+                <i class="fab fa-google"></i> Entrar con Google
+            </button>
+        </div>
+
+        <div id="auth-logged-in" class="profile-card hidden">
+            <img id="user-avatar" src="" alt="Avatar" class="profile-avatar">
+            <h2 id="user-name">Nombre de Usuario</h2>
+            <p id="user-email">Ejemplo@gmail.com</p>
+            
+            <hr>
+
+            <h3>Configuración</h3>
+            <div class="config-item">
+                <label>Modo Oscuro</label>
+                <label class="theme-switch">
+                    <input type="checkbox" id="checkbox">
+                    <div class="slider round"></div>
+                </label>
+            </div>
+
+            <button onclick="logout()" class="btn-logout">
+                <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+            </button>
+        </div>
+    </main>
+
+    <div id="toast-container"></div>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="perfil.js"></script>
+</body>
+</html>

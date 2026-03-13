@@ -23,24 +23,6 @@ function initializeDarkMode() {
 // Call initialize on page load
 document.addEventListener('DOMContentLoaded', initializeDarkMode);
 
-const CLAVE_ACCESO = "CentroMarAzul70305";
-function verificarAcceso() {
-    const intento = prompt("Introduce la clave de administrador para publicar:");
-    
-    if (intento !== CLAVE_ACCESO) {
-        alert("Acceso denegado. Volviendo al inicio.");
-        window.location.href = "index.html";
-        return false;
-    }
-    return true;
-}
-
-// Solo si la clave es correcta, el sistema deja que el resto del script funcione
-if (!verificarAcceso()) {
-    // Si no es correcto, se detiene la ejecución
-    throw new Error("Acceso no autorizado");
-}
-
 const form = document.getElementById('form-recurso');
 
 form.addEventListener('submit', async (e) => {
@@ -49,7 +31,7 @@ form.addEventListener('submit', async (e) => {
 
     const btn = document.getElementById('btn-guardar');
     btn.disabled = true;
-    btn.innerText = "Subiendo...";
+    btn.innerText = "En Curso...";
 
     const nuevoLibro = {
         titulo: document.getElementById('titulo').value,
@@ -217,3 +199,11 @@ async function eliminarRecurso(id) {
 
 // Llamar al cargar la página
 document.addEventListener('DOMContentLoaded', cargarPendientes);
+
+// Protección Admin
+async function protegerAdmin() {
+    const { data: { user } } = await supabaseClient.auth.getUser();
+    if (!user || user.email !== 'e306711@gmail.com') {
+        window.location.href = 'index.html'; // Lo sacamos si no eres tú
+    }
+}

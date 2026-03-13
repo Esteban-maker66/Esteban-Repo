@@ -373,7 +373,7 @@ input:checked + .slider:before {
 .btn-save.saved {
     background: var(--accent);
     border-color: var(--accent);
-    color: rgb(255, 208, 0);
+    color: rgba(255, 208, 0, 0.935);
 }
 
 .btn-back {
@@ -808,7 +808,7 @@ select {
 
 .libro-card .categoria-tag {
     background: var(--border);
-    color: rgba(0, 0, 0, 0.64);
+    color: rgba(0, 0, 0, 0.648);
     padding: 0.15rem 0.55rem;
     border-radius: 5px;
     font-size: 0.62rem;
@@ -1143,17 +1143,17 @@ header.search-expanded {
     position: fixed;
     bottom: 20px;
     right: 20px;
-    z-index: 9998;
+    z-index: 10001;
 }
 
 .toast {
     background: var(--surface);
     color: var(--text);
     padding: 1rem 1.5rem;
-    border-radius: 12px;
+    border-radius: 22px;
     margin-top: 10px;
-    box-shadow: 0 10px 15px var(--shadow);
-    border-left: 5px solid var(--primary);
+    box-shadow: 0 5px 15px var(--shadow);
+    border: 1px solid var(--primary);
     display: flex;
     align-items: center;
     gap: 12px;
@@ -1162,8 +1162,8 @@ header.search-expanded {
     min-width: 280px;
 }
 
-.toast.error { border-left-color: #ef4444; }
-.toast.success { border-left-color: #22c55e; }
+.toast.error { border: 1px solid #ef4444; }
+.toast.success { border: 1px solid #22c55e; }
 
 @keyframes slideIn {
     from { transform: translateX(100%); opacity: 0; }
@@ -1207,4 +1207,103 @@ header.search-expanded {
 
 .libro-card.pendiente {
     border: 2px dashed var(--accent); /* Para diferenciar lo que no es público aún */
+}
+.fas.fa-bookmark{
+    margin-right: 2px;
+}
+.form-group{
+    display: none;
+}
+
+/* Contenedor específico para el formulario de agregar */
+.form-section {
+    max-width: 500px;
+    margin: 40px auto;
+    padding: 30px;
+    background: var(--surface);
+    border-radius: 20px;
+    box-shadow: 0 15px 35px var(--shadow);
+    border: 1px solid var(--border);
+}
+
+.form-section h2 {
+    margin-bottom: 25px;
+    color: var(--primary);
+    text-align: center;
+    font-size: 1.5rem;
+}
+
+#form-recurso {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+#form-recurso label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-muted);
+}
+
+#form-recurso input, 
+#form-recurso select {
+    padding: 12px 15px;
+    border-radius: 10px;
+    border: 2px solid var(--border);
+    background: var(--background);
+    color: var(--text);
+    transition: all 0.3s ease;
+}
+
+#form-recurso input:focus, 
+#form-recurso select:focus {
+    border-color: var(--primary);
+    outline: none;
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+}
+
+#btn-guardar {
+    background: var(--primary);
+    color: white;
+    padding: 15px;
+    border: none;
+    border-radius: 10px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.2s, 0.3s;
+    margin-top: 10px;
+}
+
+#btn-guardar:active {
+    transform: scale(0.90);
+}
+
+.form-help {
+    font-size: 0.8rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 15px;
+    line-height: 1.4;
+}
+
+.profile-avatar { 
+    width: 80px;
+     border-radius: 50%;
+      margin-bottom: 1rem;
+       border: 3px solid var(--primary); 
+}
+
+.btn-login-google{
+    color: #4285f4;
+    border: 2px solid #4285f4;
+    background: transparent;
+    padding: 10px 15px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }

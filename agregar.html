@@ -3,26 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panel de Administración</title>
+    <title>Colaborar</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
     <header class="admin-header">
-        <h1><i class="fas fa-cogs"></i> Panel de control</h1>
+        <h1><i class="fas fa-pen"></i> Colaborar</h1>
         <button onclick="window.location.href='index.html'" class="btn-back">
             <i class="fas fa-arrow-left"></i> Volver al Inicio
         </button>
     </header>
 
     <main class="admin-main">
-
-        <h2>Gestión de Nuevos Recursos</h2>
         <section class="form-section">
-
+            <h2><i class="fas fa-plus"></i> Agregar Nuevo Recurso</h2>
             <form id="form-recurso">
-                    <div class="form-group">
+                <label for="categoria">Subir Portada:</label>
                 <select id="categoria" required>
                     <option value="" disabled selected>Sin categoría</option>
                     <option value="Matemáticas">Matemáticas</option>
@@ -32,23 +30,17 @@
                     <option value="Inglés">Inglés</option>
                     <option value="Formación Humana">Formación Humana</option>
                 </select>
-
                 <input type="text" id="titulo" placeholder="Título del libro" required>
                 <input type="url" id="url" placeholder="Fuente (Drive/PDF/enlace)" required>
-                <button type="submit" id="btn-guardar">+ Publicar recurso</button>       
-                </div>
-                
-                <section class="admin-section">
-                <h2><i class="fas fa-clock"></i>Recursos Pendientes de Aprobación</h2>
-            <div id="lista-pendientes" class="grid-layout">
-        </div>
-    </section>
-    </form> 
+                <button type="submit" id="btn-guardar">+ Publicar recurso</button>
+                <p class="form-help"><i class="fas fa-info-circle" id="form-help-icon"></i>Por moderacion de contenido, los recursos tienen un plazo de 24h para publicarse...</p>
+            </form>
+        </section>
+
+        <div id="mensaje"></div>
     </main>
-
-    <div id="mensaje"></div>
-
+    <div id="toast-container"></div>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="./admin.js?v=1"></script>
+    <script src="agregar.js"></script>
 </body>
 </html>

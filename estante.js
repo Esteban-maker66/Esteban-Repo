@@ -77,3 +77,24 @@ async function quitarDeEstante(recursoId) {
         location.reload();
     }
 }
+
+// Initialize dark mode on page load
+function initializeDarkMode() {
+    const savedTheme = localStorage.getItem('theme');
+    const toggleSwitch = document.querySelector('#checkbox');
+
+    if (savedTheme === 'dark') {
+        document.body.classList.add('dark-mode');
+        if (toggleSwitch) {
+            toggleSwitch.checked = true;
+        }
+    } else {
+        document.body.classList.remove('dark-mode');
+        if (toggleSwitch) {
+            toggleSwitch.checked = false;
+        }
+    }
+}
+
+// Call initialize on page load
+document.addEventListener('DOMContentLoaded', initializeDarkMode);

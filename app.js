@@ -267,14 +267,14 @@ async function guardarEnEstante(recursoId, boton) {
 
         if (error) {
             console.error('Error al eliminar:', error);
-            notificar('No se pudo quitar del estante.');
+            notificar('No se pudo quitar del estante...', 'error');
         } else {
             // actualizar UI
             favoritosSet.delete(recursoId);
             boton.classList.remove('saved');
             const icon = boton.querySelector('i');
             if (icon) icon.classList.replace('fas', 'far');
-            notificar('Recurso eliminado de Mi Estante 🗑️');
+            notificar('Eliminado de Mi Estante 🗑️');
         }
         return;
     }
@@ -335,7 +335,7 @@ document.addEventListener("DOMContentLoaded", function() {
             }
         });
     }
-    
+
     // Mobile categories dropdown
     if (mobileCategoriesBtn) {
         mobileCategoriesBtn.addEventListener("click", function(e) {
