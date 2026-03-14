@@ -71,3 +71,26 @@ document.addEventListener('DOMContentLoaded', () => {
         btn.innerText = "+ Publicar recurso";
     });
 });
+
+const trigger = document.getElementById('select-trigger');
+const list = document.getElementById('options-list');
+const opciones = document.querySelectorAll('.opcion');
+
+trigger.addEventListener('click', () => {
+    list.classList.toggle('active');
+});
+
+opciones.forEach(opcion => {
+    opcion.addEventListener('click', () => {
+        trigger.querySelector('span').innerText = opcion.innerText;
+        list.classList.remove('active');
+        
+        console.log("Seleccionado:", opcion.getAttribute('data-value'));
+    });
+});
+
+document.addEventListener('click', (e) => {
+    if (!trigger.contains(e.target) && !list.contains(e.target)) {
+        list.classList.remove('active');
+    }
+});

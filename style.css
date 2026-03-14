@@ -1317,3 +1317,54 @@ header.search-expanded {
     border-radius: 4px;
     display: inline-block;
 }
+
+#categoria {
+    position: relative;
+    width: 100%; /* Se adapta al contenedor padre */
+    
+    user-select: none;
+}
+
+.select-trigger {
+    background: var(--border);
+    color: rgba(0, 0, 0, 0.648);
+    padding: 0.6rem 1rem;
+    border-radius: 10px;
+    border: 1px solid rgba(128, 128, 128, 0.231);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+}
+
+.options-list {
+    position: absolute;
+    top: 110%; /* Aparece justo debajo */
+    left: 0;
+    right: 0; /* Asegura que no se desborde a los lados */
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: none; /* Oculto por defecto */
+    z-index: 200;
+    overflow: hidden;
+}
+
+.options-list.active {
+    display: block; /* Se muestra al hacer click */
+}
+
+.opcion {
+    padding: 10px 15px;
+    cursor: pointer;
+    transition: 0.2s;
+    color: #333;
+}
+
+.opcion:hover {
+    background: var(--primary);
+    color: white;
+}

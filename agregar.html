@@ -20,18 +20,26 @@
         <section class="form-section">
             <h2><i class="fas fa-plus"></i> Agregar Nuevo Recurso</h2>
             <form id="form-recurso">
-                <label for="categoria">Subir Portada:</label>
-                <select id="categoria" required>
-                    <option value="" disabled selected>Sin categoría</option>
-                    <option value="Matemáticas">Matemáticas</option>
-                    <option value="Lengua Española">Lengua Española</option>
-                    <option value="Ciencias Naturales">Ciencias Naturales</option>
-                    <option value="Ciencias Sociales">Ciencias Sociales</option>
-                    <option value="Inglés">Inglés</option>
-                    <option value="Formación Humana">Formación Humana</option>
-                </select>
-                <input type="text" id="titulo" placeholder="Título del libro" required>
-                <input type="url" id="url" placeholder="Fuente (Drive/PDF/enlace)" required>
+                <h4 class="options">Seleccionar categoría:</h4>
+                <div id="categoria" required>
+                    <div class="select-trigger" id="select-trigger">
+                    <span>Sin categoría</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+
+        <ul class="options-list" id="options-list">
+            <li class="opcion" value="Matemáticas" required>Matemáticas</li>
+            <li class="opcion" value="Lengua Española" required>Lengua Española</li>
+            <li class="opcion" value="Ciencias Naturales" required>Ciencias Naturales</li>
+            <li class="opcion" value="Ciencias Sociales" required>Ciencias Sociales</li>
+            <li class="opcion" value="Inglés" required>Inglés</li>
+            <li class="opcion" value="Formación Humana" required>Formación Humana</li>
+        </ul>
+        </div>
+                <h4 class="options">Título del libro:</h4>
+                <input type="text" id="titulo" placeholder="Título" required>
+                <h4 class="options">Tu fuente:</h4>
+                <input type="url" id="url" placeholder="(Drive/PDF/enlace)" required>
                 <button type="submit" id="btn-guardar">+ Publicar recurso</button>
                 <p class="form-help"><i class="fas fa-info-circle" id="form-help-icon"></i>Por moderacion de contenido, los recursos tienen un plazo de 24h para publicarse...</p>
             </form>

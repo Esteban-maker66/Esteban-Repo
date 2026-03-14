@@ -127,14 +127,7 @@ if (toggleSwitch) {
     });
 }
 
-window.onscroll = function() {
-    const header = document.querySelector("header");
-    if (window.pageYOffset > 50) {
-        header.classList.add("header-scrolled");
-    } else {
-        header.classList.remove("header-scrolled");
-    }
-};
+
 
 function filtrarPorCategoria(categoria) {
     const inputBusqueda = document.getElementById('busqueda');
@@ -234,7 +227,7 @@ function renderizar(lista) {
     grid.innerHTML = '';
 
     if (lista.length === 0) {
-        grid.innerHTML = `<p class="not-found" style="grid-column: 1/-1; text-align: center;">No hay recursos... 🌊</p>`;
+        grid.innerHTML = `<p class="not-found" style="grid-column: 1/-1; text-align: center;">No hay recursos en tu busqueda... 🌊</p>`;
         if (loader) loader.classList.add('hidden');
         return;
     }
@@ -310,7 +303,7 @@ async function guardarEnEstante(recursoId, boton) {
             notificar("¡Este libro ya está en tu estante! ✨");
         } else {
             console.error("Error al guardar:", error);
-            notificar("Hubo un problema al guardar...");
+            notificar("¡Inicia sesion para esta funcion!");
         }
     } else {
         // Cambiamos el icono para dar feedback visual

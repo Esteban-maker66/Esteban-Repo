@@ -25,13 +25,15 @@ document.addEventListener('DOMContentLoaded', initializeDarkMode);
 
 const form = document.getElementById('form-recurso');
 
-form.addEventListener('submit', async (e) => {
-    e.preventDefault(); // Evita que la página parpadee
-    console.log("¡Botón pulsado correctamente!");
+if (form) {
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
 
     const btn = document.getElementById('btn-guardar');
-    btn.disabled = true;
-    btn.innerText = "En Curso...";
+        if (btn) {
+            btn.disabled = true;
+            btn.innerText = "Enviando...";
+        }
 
     const nuevoLibro = {
         titulo: document.getElementById('titulo').value,
@@ -47,12 +49,16 @@ form.addEventListener('submit', async (e) => {
         notificar("Error al subir: " + error.message);
     } else {
         notificar("¡Libro agregado con éxito!");
-        form.reset(); // Limpia el formulario para el siguiente libro
+        form.reset();
     }
     
-    btn.disabled = false;
-    btn.innerText = "Publicar recurso";
-});
+    if (btn) {
+            btn.disabled = false;
+            btn.innerText = "+ Publicar";
+        }
+    });
+}
+document.addEventListener('DOMContentLoaded', cargarPendientes);
 
 // Dark mode toggle
 const toggleSwitch = document.querySelector('#checkbox');
@@ -176,6 +182,9 @@ async function cargarPendientes(recursos) {
 
 // Función para aprobar (Update)
 async function aprobarRecurso(id) {
+
+    if(!confirm("¿Aprobar este recurso? Pasará a estar visible para todos.")) return;
+
     const { error } = await supabaseClient
         .from('recursos')
         .update({ aprobado: true })
@@ -191,7 +200,7 @@ async function aprobarRecurso(id) {
 
 // Función para eliminar/rechazar (Delete)
 async function eliminarRecurso(id) {
-    if(!confirm("¿Seguro que quieres rechazar y borrar este recurso?")) return;
+    if(!confirm("¿rechazar y borrar este recurso?")) return;
 
     const { error } = await supabaseClient
         .from('recursos')

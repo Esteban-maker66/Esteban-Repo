@@ -9,14 +9,10 @@ function initializeDarkMode() {
 
     if (savedTheme === 'dark') {
         document.body.classList.add('dark-mode');
-        if (toggleSwitch) {
-            toggleSwitch.checked = true;
-        }
+        if (toggleSwitch) toggleSwitch.checked = true;
     } else {
         document.body.classList.remove('dark-mode');
-        if (toggleSwitch) {
-            toggleSwitch.checked = false;
-        }
+        if (toggleSwitch) toggleSwitch.checked = false;
     }
 }
 
@@ -39,24 +35,37 @@ if (toggleSwitch) {
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
-    // 1 Aplicar tema guardado
+    
     const checkbox = document.querySelector('#checkbox');
-    if (localStorage.getItem('theme') === 'dark') {
-        document.body.classList.add('dark-mode');
-        if(checkbox) checkbox.checked = true;
+    const body = document.body;
+
+    // 1. Sincronización Inicial (Estado -> Interfaz)
+    const currentTheme = localStorage.getItem('theme');
+    
+    if (currentTheme === 'dark') {
+        body.classList.add('dark-mode');
+        if (checkbox) checkbox.checked = true;
+    } else {
+        body.classList.remove('dark-mode');
+        if (checkbox) checkbox.checked = false;
     }
 
-    // 2 Escuchar cambios de tema
+    // 2. Escuchar cambios (Único listener)
     checkbox?.addEventListener('change', () => {
-        document.body.classList.toggle('dark-mode');
-        localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+        if (checkbox.checked) {
+            body.classList.add('dark-mode');
+            localStorage.setItem('theme', 'dark');
+        } else {
+            body.classList.remove('dark-mode');
+            localStorage.setItem('theme', 'light');
+        }
     });
 
-    // 3 Verificar si el usuario ya está logueado
+    // 3. Autenticación Supabase (Mantén esto igual)
     const { data: { session } } = await supabaseClient.auth.getSession();
     actualizarInterfaz(session);
 
-    // 4 Escuchar cambios de autenticación en tiempo real
+
     supabaseClient.auth.onAuthStateChange((_event, session) => {
         actualizarInterfaz(session);
     });
