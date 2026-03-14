@@ -43,25 +43,43 @@ async function obtenerFavoritos() {
     }
 }
 
-async function obtenerRecursos() {
-    // Evitamos doble llamada al loader
-    loader.classList.remove('hidden');
-     
-    let { data: recursos, error } = await supabaseClient
-        .from('recursos')
-        .select('*');
+async function obtenerRecursos(categoria = 'todas') {
+    // Verificación de seguridad para el loader y grid
+    if (!loader || !grid) return; 
 
-    loader.classList.add('hidden');
+    loader.style.display = 'block';
+    grid.innerHTML = '';
+     
+    // Construcción de la consulta optimizada
+    let query = supabaseClient
+        .from('recursos')
+        .select('*')
+        .eq('aprobado', true); // Solo mostrar lo verificado
+
+    // Si no es 'todas', filtramos directamente en Supabase
+    if (categoria !== 'todas') {
+        query = query.eq('categoria', categoria);
+    }
+
+    const { data: recursos, error } = await query.order('created_at', { ascending: false });
+
+    loader.style.display = 'none';
 
     if (error) {
         console.error('Error:', error);
-        // Si hay error, avisamos al usuario en el grid
+
         grid.innerHTML = '<p style="color: red;">Error al conectar con la biblioteca</p>';
         return;
     }
     
     todosLosRecursos = recursos; 
-    await obtenerFavoritos();
+    
+    // Cargar favoritos antes de mostrar para que los iconos salgan marcados
+    if (typeof obtenerFavoritos === "function") {
+        await obtenerFavoritos();
+    }
+
+    // Llamada a la renderización
     renderizar(todosLosRecursos);
 }
 
@@ -216,7 +234,7 @@ function renderizar(lista) {
     grid.innerHTML = '';
 
     if (lista.length === 0) {
-        grid.innerHTML = `<p class="not-found" style="grid-column: 1/-1; text-align: center;">No hay recursos que coincidan con tu búsqueda... 🌊</p>`;
+        grid.innerHTML = `<p class="not-found" style="grid-column: 1/-1; text-align: center;">No hay recursos... 🌊</p>`;
         if (loader) loader.classList.add('hidden');
         return;
     }
@@ -224,28 +242,28 @@ function renderizar(lista) {
     lista.forEach(item => {
         const card = document.createElement('div');
         card.className = 'libro-card';
-        // determinar si el recurso ya está guardado
+        
         const saved = favoritosSet.has(item.id);
         const iconClass = saved ? 'fas' : 'far';
-        const btnClass = saved ? 'btn-save saved' : 'btn-save';
+
         card.innerHTML = `
             <div class="card-header">
                 <span class="categoria-tag">${item.categoria || 'Sin categoría'}</span>
-                <button class="${btnClass}" onclick="guardarEnEstante(${item.id}, this)" title="Guardar en mi estante">
+                <button class="btn-save ${saved ? 'saved' : ''}" onclick="guardarEnEstante(${item.id}, this)">
                     <i class="${iconClass} fa-bookmark"></i>
                 </button>
             </div>
             <strong>${item.titulo}</strong>
-            <div class="card-footer">
-                <a href="${item.url}" target="_blank" class="btn-download">
-                    <i class="fas fa-external-link-alt"></i> Abrir
+            <div class="card-footer" style="margin-top: 15px;">
+                <a href="${item.url}" target="_blank" class="btn-download" style="width: 100%; text-align: center;">
+                    <i class="fas fa-external-link-alt"></i> Abrir Recurso
                 </a>
             </div>
         `;
         grid.appendChild(card);
     });
 
-    // IMPORTANTE: Ocultar el loader después de renderizar
+
     if (loader) loader.classList.add('hidden');
 }
 
@@ -257,7 +275,7 @@ async function guardarEnEstante(recursoId, boton) {
         localStorage.setItem('arrecife_session_id', userId);
     }
 
-    // si ya está guardado, lo eliminamos en lugar de insertarlo
+    // si ya está guardado, lo elimina en lugar de insertarlo
     if (favoritosSet.has(recursoId)) {
         const { error } = await supabaseClient
             .from('favoritos')
@@ -389,6 +407,6 @@ function notificar(mensaje, tipo = 'info') {
         toast.style.opacity = '0';
         toast.style.transform = 'translateX(100%)';
         toast.style.transition = 'all 0.3s ease';
-        setTimeout(() => toast.remove(), 500);
-    }, 5000);
+        setTimeout(() => toast.remove(), 300);
+    }, 3600);
 }

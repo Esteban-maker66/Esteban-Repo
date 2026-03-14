@@ -126,7 +126,7 @@ const nuevoLibro = {
 };
 
 // Función para cargar lo que está pendiente
-async function cargarPendientes() {
+async function cargarPendientes(recursos) {
     const contenedor = document.getElementById('lista-pendientes');
     contenedor.innerHTML = '<p>Buscando recursos pendientes...</p>';
 
@@ -147,11 +147,19 @@ async function cargarPendientes() {
 
     contenedor.innerHTML = ''; // Limpiamos
     data.forEach(recurso => {
+
+        const fecha = new Date(recurso.created_at).toLocaleDateString();
         const card = document.createElement('div');
         card.className = 'libro-card pendiente';
         card.innerHTML = `
+        <div class="card-info">
             <strong>${recurso.titulo}</strong>
             <small>${recurso.categoria}</small>
+            <div class="meta-info" style="font-size: 0.7rem; color: var(--text-muted); margin-top: 5px;">
+                <span><i class="fas fa-user"></i> ${recurso.usuario_nombre || 'Usuario'}</span><br>
+                <span><i class="fas fa-calendar"></i> ${new Date(recurso.created_at).toLocaleDateString()}</span>
+            </div>
+        </div>
             <div class="admin-actions">
                 <button onclick="aprobarRecurso(${recurso.id})" class="btn-approve">
                     <i class="fas fa-check"></i> Aprobar
@@ -162,6 +170,7 @@ async function cargarPendientes() {
             </div>
         `;
         contenedor.appendChild(card);
+        return card;
     });
 }
 

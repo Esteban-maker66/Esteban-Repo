@@ -1307,3 +1307,13 @@ header.search-expanded {
     align-items: center;
     gap: 8px;
 }
+
+.user-tag {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-top: 8px;
+    background: var(--background);
+    padding: 4px 8px;
+    border-radius: 4px;
+    display: inline-block;
+}

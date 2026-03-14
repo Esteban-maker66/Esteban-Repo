@@ -39,47 +39,62 @@ if (toggleSwitch) {
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
-    // 1. Verificar si hay sesión activa
-    const { data: { session } } = await supabaseClient.auth.getSession();
-    
-    if (session) {
-        mostrarPerfil(session.user);
-    }
-
-    // 2. Cargar Tema
+    // 1 Aplicar tema guardado
     const checkbox = document.querySelector('#checkbox');
     if (localStorage.getItem('theme') === 'dark') {
         document.body.classList.add('dark-mode');
         if(checkbox) checkbox.checked = true;
     }
 
-    // 3. Listener del Tema
+    // 2 Escuchar cambios de tema
     checkbox?.addEventListener('change', () => {
         document.body.classList.toggle('dark-mode');
         localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+    });
+
+    // 3 Verificar si el usuario ya está logueado
+    const { data: { session } } = await supabaseClient.auth.getSession();
+    actualizarInterfaz(session);
+
+    // 4 Escuchar cambios de autenticación en tiempo real
+    supabaseClient.auth.onAuthStateChange((_event, session) => {
+        actualizarInterfaz(session);
     });
 });
 
 async function loginConGoogle() {
     const { error } = await supabaseClient.auth.signInWithOAuth({
         provider: 'google',
-        options: { redirectTo: window.location.origin + '/perfil.html' }
+        options: {
+            redirectTo: window.location.origin + '/perfil.html'
+        }
     });
-    if (error) {
-        notificar("Error al conectar con Google: " + error.message, "error");
-    }
+    if (error) alert("Error al conectar: " + error.message);
 }
 
 async function logout() {
     await supabaseClient.auth.signOut();
+    localStorage.removeItem('arrecife_session_id');
     location.reload();
 }
 
-function mostrarPerfil(user) {
-    document.getElementById('auth-logged-out').classList.add('hidden');
-    document.getElementById('auth-logged-in').classList.remove('hidden');
+function actualizarInterfaz(session) {
+    const logOutDiv = document.getElementById('auth-logged-out');
+    const logInDiv = document.getElementById('auth-logged-in');
 
-    document.getElementById('user-name').innerText = user.user_metadata.full_name;
-    document.getElementById('user-email').innerText = user.email;
-    document.getElementById('user-avatar').src = user.user_metadata.avatar_url;
+    if (session) {
+        logOutDiv.style.display = 'none';
+        logInDiv.style.display = 'block';
+
+        const user = session.user.user_metadata;
+        document.getElementById('user-avatar').src = user.avatar_url;
+        document.getElementById('user-name').innerText = user.full_name;
+        document.getElementById('user-email').innerText = session.user.email;
+        
+        
+        localStorage.setItem('arrecife_session_id', session.user.id);
+    } else {
+        logOutDiv.style.display = 'block';
+        logInDiv.style.display = 'none';
+    }
 }
