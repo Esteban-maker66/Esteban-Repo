@@ -10,6 +10,9 @@
     --border: #e2e8f0;
     --shadow: rgba(0, 0, 0, 0.1);
     --shadow-hover: rgba(0, 0, 0, 0.907);
+    --option: #f1f5f9;
+    --option2: #dcdcdc;
+    --hover: rgba(254, 254, 254, 0.9);
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -17,11 +20,14 @@
 body.dark-mode {
     --background: #0f172a;
     --surface: #1e293b;
-    --text: #f1f5f9;
+    --text: #ffffffe4;
     --text-muted: #94a3b8;
     --border: #334155;
     --shadow: rgba(0, 0, 0, 0.3);
     --shadow-hover: rgba(0, 0, 0, 0.4);
+    --option: #334155;
+    --option2: #475569;
+    --hover: #4970db;
 }
 
 body {
@@ -164,23 +170,23 @@ header h1 {
 }
 
 .dropdown-btn {
-    background: rgba(255, 255, 255, 0.1) !important;
-    border: 1px solid rgba(255, 255, 255, 0.2) !important;
-    color: white !important;
-    padding: 0.5rem 0.75rem !important;
-    border-radius: 20px !important;
-    cursor: pointer !important;
-    font-size: 0.875rem !important;
-    font-weight: 500 !important;
-    transition: all 0.3s ease !important;
-    display: flex !important;
-    align-items: center !important;
-    gap: 0.25rem !important;
-    backdrop-filter: blur(10px) !important;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: white ;
+    padding: 0.5rem 0.75rem ;
+    border-radius: 20px ;
+    cursor: pointer ;
+    font-size: 0.875rem ;
+    font-weight: 500 ;
+    transition: all 0.3s ease ;
+    display: flex ;
+    align-items: center ;
+    gap: 0.25rem ;
+    backdrop-filter: blur(10px) ;
 }
 
 .dropdown-btn:hover {
-    background: rgba(255, 255, 255, 0.2) !important;
+    background: rgba(255, 255, 255, 0.2) ;
     transform: translateY(-1px);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
@@ -192,7 +198,7 @@ header h1 {
 }
 
 .dropdown-arrow {
-    font-size: 0.7rem !important;
+    font-size: 0.7rem ;
     transition: 0.3s ease;
 }
 
@@ -464,7 +470,7 @@ input:checked + .slider:before {
     border: 2px solid var(--border);
     border-radius: 8px;
     font-size: 1rem;
-    transition: border-color 0.3s ease;
+    transition: 0.3s ease;
 }
 
 .form-section select:focus,
@@ -484,6 +490,13 @@ input:checked + .slider:before {
     font-weight: 600;
     transition: all 0.3s ease;
     align-self: flex-start;
+}
+
+#btn-guardar:disabled {
+    background-color: #a0a0a0; 
+    cursor: not-allowed;
+    opacity: 0.6;
+    box-shadow: none;
 }
 
 #btn-guardar:active {
@@ -538,12 +551,7 @@ main {
 }
 
 .libro-card:active {
-    transform: scale(0.9);
-}
-
-.libro-card:hover {
-    box-shadow: 0 6px 25px rgba(76, 76, 76, 0.365);
-    transform: scale(1.01);
+    transform: scale(0.99);
 }
 
 .libro-card > strong {
@@ -629,16 +637,7 @@ input:checked + .slider:before {
 
 .hidden { display: none; }
 
-select {
-    width: 100%;
-    padding: 10px;
-    border-radius: 5px;
-    border: 2px solid var(--color-primario);
-    background-color: white;
-    font-family: inherit;
-    cursor: pointer;
-    outline: none;
-}
+
 
 /* Animations */
 @keyframes fadeIn {
@@ -911,17 +910,17 @@ select {
     top: 0;
     right: 0;
     width: 240px;
-    height: 85%;
+    height: 100%;
     background: var(--surface);
     box-shadow: -4px 0 20px rgba(0, 0, 0, 0.3);
     transform: translateX(100%);
     transition: 0.3s ease;
     padding: 2rem 0;
     overflow-y: auto;
+    overflow-x: hidden;
     z-index: 1001;
-    border-radius: 0 0 0 32px;
     border: 1px solid var(--border);
-    
+
 }
 
 .mobile-menu-overlay.active .mobile-menu {
@@ -1018,7 +1017,7 @@ select {
     }
 
     .mobile-menu {
-        width: 60%;
+        width: 61%;
     }
     .header-center {
         order: 3;
@@ -1062,7 +1061,7 @@ select {
 
     /* Mobile search toggle */
     .mobile-search-btn {
-        display: flex !important;
+        display: flex ;
         background: transparent;
         border: none;
         color: var(--text);
@@ -1162,8 +1161,8 @@ header.search-expanded {
     min-width: 280px;
 }
 
-.toast.error { border: 1px solid #ef4444; }
-.toast.success { border: 1px solid #22c55e; }
+.toast.error { border: 1px solid #ef4444; box-shadow: 0 0 6px #ef4444 }
+.toast.success { border: 1px solid #22c55e; box-shadow: 0 0 6px #22c55e }
 
 @keyframes slideIn {
     from { transform: translateX(100%); opacity: 0; }
@@ -1326,11 +1325,11 @@ header.search-expanded {
 }
 
 .select-trigger {
-    background: var(--border);
+    background: var(--background);
     color: rgba(0, 0, 0, 0.648);
     padding: 0.6rem 1rem;
     border-radius: 10px;
-    border: 1px solid rgba(128, 128, 128, 0.231);
+    border: 2px solid rgba(128, 128, 128, 0.231);
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -1339,18 +1338,19 @@ header.search-expanded {
 
 .options-list {
     position: absolute;
-    top: 110%; /* Aparece justo debajo */
+    top: 100%;
     left: 0;
-    right: 0; /* Asegura que no se desborde a los lados */
-    background: white;
+    right: 0; 
+    background: var(--option2);
     border-radius: 15px;
     box-shadow: 0 10px 25px rgba(0,0,0,0.1);
     list-style: none;
     padding: 0;
     margin: 0;
-    display: none; /* Oculto por defecto */
+    display: none;
     z-index: 200;
     overflow: hidden;
+    border: 2px solid var(--border);
 }
 
 .options-list.active {
@@ -1361,10 +1361,56 @@ header.search-expanded {
     padding: 10px 15px;
     cursor: pointer;
     transition: 0.2s;
-    color: #333;
+    color: var(--text);
+    background-color: var(--option);
+    border-radius: 10px;
+    margin: 0.2rem;
 }
 
-.opcion:hover {
-    background: var(--primary);
-    color: white;
+.opcion:active {
+    background-color: var(--option2);
+    transform: scale(0.92);
+}
+
+.no-selected {
+    color: var(--text-muted);
+}
+.fas.fa-chevron-down.dropdown-arrow{
+    color: rgb(216, 216, 216)
+}
+
+.btn-logout{
+    background-color: var(--border);
+    padding: 0.5rem;
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    font-size: 1.3rem;
+    display: flex;
+    align-items: center;
+    margin: 10px auto;
+    margin-top: 70px;
+}
+
+.fas.fa-sign-out-alt{
+    margin-right: 7px;
+}
+
+.btn-logout.active{
+    transform: scale(0.80);
+}
+
+.btn-login-google{
+    display: flex;
+    align-items: center;
+    margin: 20px auto;
+}
+
+#google{
+    display: none;
+}
+
+.protip{
+    display: flex;
+    align-items: center;
+    margin: 5px 0 30px 10px;
 }

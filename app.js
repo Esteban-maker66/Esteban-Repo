@@ -177,9 +177,21 @@ function filtrarPorCategoria(categoria) {
 }
 
 // Dropdown functionality
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', async function() {
     const dropdownBtn = document.getElementById('btn-categorias');
     const dropdown = document.querySelector('.dropdown');
+    const adminLink = document.querySelector('a[href="admin.html"]'); // Selecciona el enlace
+    const { data: { session } } = await supabaseClient.auth.getSession();
+    
+    const ADMIN_EMAIL = 'e306711@gmail.com';
+
+    if (adminLink) {
+        if (session && session.user.email === ADMIN_EMAIL) {
+            adminLink.style.display = 'flex';
+        } else {
+            adminLink.remove();
+        }
+    }
 
     if (dropdownBtn && dropdown) {
         dropdownBtn.addEventListener('click', function(e) {
@@ -249,7 +261,7 @@ function renderizar(lista) {
             <strong>${item.titulo}</strong>
             <div class="card-footer" style="margin-top: 15px;">
                 <a href="${item.url}" target="_blank" class="btn-download" style="width: 100%; text-align: center;">
-                    <i class="fas fa-external-link-alt"></i> Abrir Recurso
+                    <i class="fas fa-external-link-alt"></i> Abrir
                 </a>
             </div>
         `;

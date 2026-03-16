@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -23,17 +23,19 @@
                 <h4 class="options">Seleccionar categoría:</h4>
                 <div id="categoria" required>
                     <div class="select-trigger" id="select-trigger">
-                    <span>Sin categoría</span>
-                    <i class="fas fa-chevron-down"></i>
+                    <span class="no-selected">Sin categoría...</span>
+                    <i id="down" class="fas fa-chevron-down dropdown-arrow"></i>
                 </div>
 
+             <input type="hidden" name="categoria" id="categoria-input" value="">
+
         <ul class="options-list" id="options-list">
-            <li class="opcion" value="Matemáticas" required>Matemáticas</li>
-            <li class="opcion" value="Lengua Española" required>Lengua Española</li>
-            <li class="opcion" value="Ciencias Naturales" required>Ciencias Naturales</li>
-            <li class="opcion" value="Ciencias Sociales" required>Ciencias Sociales</li>
-            <li class="opcion" value="Inglés" required>Inglés</li>
-            <li class="opcion" value="Formación Humana" required>Formación Humana</li>
+            <li class="opcion" data-value="Matemáticas" >Matemáticas</li>
+            <li class="opcion" data-value="Lengua Española" >Lengua Española</li>
+            <li class="opcion" data-value="Ciencias Naturales" >Ciencias Naturales</li>
+            <li class="opcion" data-value="Ciencias Sociales" >Ciencias Sociales</li>
+            <li class="opcion" data-value="Inglés" >Inglés</li>
+            <li class="opcion" data-value="Formación Humana" >Formación Humana</li>
         </ul>
         </div>
                 <h4 class="options">Título del libro:</h4>
