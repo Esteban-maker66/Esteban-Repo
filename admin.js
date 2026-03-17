@@ -147,7 +147,7 @@ async function cargarPendientes(recursos) {
     }
 
     if (data.length === 0) {
-        contenedor.innerHTML = '<p>No hay nada pendiente por ahora. ¡Todo limpio!</p>';
+        contenedor.innerHTML = '<p class="non-books">No hay nada pendiente por ahora. ¡Todo limpio!</p>';
         return;
     }
 
@@ -192,7 +192,8 @@ async function aprobarRecurso(id) {
 
     if (error) {
         notificar("No se pudo aprobar", "error");
-    } else {
+    } 
+    else {
         notificar("Recurso aprobado y visible", "success");
         cargarPendientes(); // Recargamos la lista
     }

@@ -7,6 +7,20 @@
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <meta name="description" content="Arrecife Digital: Tu biblioteca colaborativa de recursos y libros digitales.">
+    <meta name="author" content="Esteban David">
+
+    <meta property="og:title" content="Arrecife Digital 🌊">
+    <meta property="og:description" content="Explora y colabora en la biblioteca digital más completa.">
+    <meta property="og:image" content="assets/logopng.webp"> <meta property="og:url" content="https://ArrecifeDigital.vercel.app">
+    <meta property="og:type" content="website">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Arrecife Digital 🌊">
+    <meta name="twitter:description" content="Recursos digitales a un clic.">
+    <meta name="twitter:image" content="assets/logopng.webp">
+
+    <link rel="icon" type="image/png" href="assets/logopng.webp">
 </head>
 <body>
     <header>
@@ -32,39 +46,32 @@
                             <i class="fas fa-list"></i> Categorías <i class="fas fa-chevron-down dropdown-arrow"></i>
                         </button>
                         <div class="dropdown-content">
-                            <a href="#" onclick="filtrarPorCategoria('matematicas')">
-                                <i class="fas fa-calculator"></i> Matemáticas
+                            <a href="#" onclick="filtrarPorCategoria('narrativa')">
+                                <i class="fas fa-book"></i> Narrativa
                             </a>
-                            <a href="#" onclick="filtrarPorCategoria('fisica')">
-                                <i class="fas fa-atom"></i> Física
+                            <a href="#" onclick="filtrarPorCategoria('ciencia ficcion')">
+                                <i class="fas fa-bolt"></i> Ciencia Ficción
                             </a>
-                            <a href="#" onclick="filtrarPorCategoria('quimica')">
-                                <i class="fas fa-flask"></i> Química
+                            <a href="#" onclick="filtrarPorCategoria('misterio y suspenso')">
+                                <i class="fas fa-question"></i> Misterio y Suspenso
                             </a>
-                            <a href="#" onclick="filtrarPorCategoria('biologia')">
-                                <i class="fas fa-dna"></i> Biología
+                            <a href="#" onclick="filtrarPorCategoria('comics y novelas')">
+                                <i class="fas fa-feather"></i> Cómics y Novelas
                             </a>                      
-                            <a href="#" onclick="filtrarPorCategoria('Ciencias Sociales')">
-                                <i class="fas fa-globe"></i> Ciencias Sociales
+                            <a href="#" onclick="filtrarPorCategoria('academicos')">
+                                <i class="fas fa-globe"></i> Académicos
                             </a>
-                            <a href="#" onclick="filtrarPorCategoria('lengua española')">
-                                <i class="fas fa-book-open"></i> Lengua Española
+                            <a href="#" onclick="filtrarPorCategoria('desarrollo personal')">
+                                <i class="fas fa-book-open"></i> Desarrollo Personal
                             </a>
-                            <a href="#" onclick="filtrarPorCategoria('ingles')">
-                                <i class="fas fa-language"></i> Inglés
+                            <a href="#" onclick="filtrarPorCategoria('documentales')">
+                                <i class="fas fa-comment-dots"></i> Documentales
                             </a>
-                            <a href="#" onclick="filtrarPorCategoria('frances')">
-                                <i class="fas fa-language"></i> Frances
+                            <a href="#" onclick="filtrarPorCategoria('comedia')">
+                                <i class="fas fa-mask"></i> Comedia
                             </a>
-                            <a href="#" onclick="filtrarPorCategoria('formacion-humana')">
-                                <i class="fas fa-brain"></i> Formacion Humana
-                            </a>
-                            <a href="#" onclick="filtrarPorCategoria('arte')">
-                                <i class="fas fa-palette"></i> Arte
-                            </a>
-                            
-                            <a href="#" onclick="filtrarPorCategoria('educacion-fisica')">
-                                <i class="fas fa-running"></i> Educación Física
+                            <a href="#" onclick="filtrarPorCategoria('biblias')">
+                                <i class="fas fa-brain"></i> Biblias
                             </a>
                             <div class="dropdown-divider"></div>
                             <a href="#" onclick="filtrarPorCategoria('todas')">
@@ -74,7 +81,7 @@
                     </div>
                     <button id="btn-Estante" onclick="window.location.href='estante.html'"><i class="fas fa-bookmark"></i> Mi Estante</button>
                     <button id="btn-Perfil" onclick="window.location.href='perfil.html'"><i class="fas fa-user"></i> Perfil</button>
-                    <button id="btn-admin" onclick="window.location.href='admin.html'"><i class="fas fa-cog"></i> Administracion</button>
+                    <button id="btn-admin" onclick="window.location.href='admin.html'" class="admin-nav"><i class="fas fa-cog"></i> Administracion</button>
                     <button id="btn-colaborar" onclick="window.location.href='agregar.html'"><i class="fas fa-pen"></i> Colaborar</button>
                 </nav>
                 <button class="hamburger-btn" id="hamburger-btn">
@@ -101,38 +108,32 @@
                         <i class="fas fa-list"></i> Categorías <i class="fas fa-chevron-down"></i>
                     </button>
                     <div class="mobile-dropdown-content" id="mobile-categories-content">
-                        <a href="#" onclick="filtrarPorCategoria('matematicas'); closeMobileMenu();">
-                            <i class="fas fa-calculator"></i> Matemáticas
+                        <a href="#" onclick="filtrarPorCategoria('narrativa'); closeMobileMenu();">
+                            <i class="fas fa-book"></i> Narrativa
                         </a>
-                        <a href="#" onclick="filtrarPorCategoria('fisica'); closeMobileMenu();">
-                            <i class="fas fa-atom"></i> Física
+                        <a href="#" onclick="filtrarPorCategoria('ciencia Ficción'); closeMobileMenu();">
+                            <i class="fas fa-bolt"></i> Ciencia Ficción
                         </a>
-                        <a href="#" onclick="filtrarPorCategoria('quimica'); closeMobileMenu();">
-                            <i class="fas fa-flask"></i> Química
+                        <a href="#" onclick="filtrarPorCategoria('misterio y suspenso'); closeMobileMenu();">
+                            <i class="fas fa-question"></i> Misterio y Suspenso
                         </a>
-                        <a href="#" onclick="filtrarPorCategoria('biologia'); closeMobileMenu();">
-                            <i class="fas fa-dna"></i> Biología
+                        <a href="#" onclick="filtrarPorCategoria('comics y novelas'); closeMobileMenu();">
+                            <i class="fas fa-feather"></i> Cómics y Novelas
                         </a>
-                        <a href="#" onclick="filtrarPorCategoria('Ciencias Sociales'); closeMobileMenu();">
-                            <i class="fas fa-globe"></i> Ciencias Sociales
+                        <a href="#" onclick="filtrarPorCategoria('academicos'); closeMobileMenu();">
+                            <i class="fas fa-globe"></i> Académicos
                         </a>
-                        <a href="#" onclick="filtrarPorCategoria('lengua española'); closeMobileMenu();">
-                            <i class="fas fa-book-open"></i> Lengua Española
+                        <a href="#" onclick="filtrarPorCategoria('desarrollo personal'); closeMobileMenu();">
+                            <i class="fas fa-book-open"></i> Desarrollo Personal
                         </a>
-                        <a href="#" onclick="filtrarPorCategoria('ingles'); closeMobileMenu();">
-                            <i class="fas fa-language"></i> Inglés
+                        <a href="#" onclick="filtrarPorCategoria('documentales'); closeMobileMenu();">
+                            <i class="fas fa-comment-dots"></i> Documentales
                         </a>
-                        <a href="#" onclick="filtrarPorCategoria('frances'); closeMobileMenu();">
-                            <i class="fas fa-language"></i> Frances
+                        <a href="#" onclick="filtrarPorCategoria('comedia'); closeMobileMenu();">
+                            <i class="fas fa-mask"></i> Comedia
                         </a>
-                        <a href="#" onclick="filtrarPorCategoria('formacion-humana'); closeMobileMenu();">
-                            <i class="fas fa-brain"></i> Formacion Humana
-                        </a>
-                        <a href="#" onclick="filtrarPorCategoria('arte'); closeMobileMenu();">
-                            <i class="fas fa-palette"></i> Arte
-                        </a>
-                        <a href="#" onclick="filtrarPorCategoria('educacion-fisica'); closeMobileMenu();">
-                            <i class="fas fa-running"></i> Educación Física
+                        <a href="#" onclick="filtrarPorCategoria('Biblias'); closeMobileMenu();">
+                            <i class="fas fa-brain"></i> Biblias
                         </a>
                         <a href="#" onclick="filtrarPorCategoria('todas'); closeMobileMenu();">
                             <i class="fas fa-th-large"></i> Todas las categorías

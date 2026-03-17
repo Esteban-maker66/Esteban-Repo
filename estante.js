@@ -49,13 +49,13 @@ function renderizarEstante(lista) {
         card.className = 'libro-card';
         card.innerHTML = `
             <div class="card-header">
-                <strong class="titulo">${item.titulo}</strong>
+                <small class="categoria-tag">${item.categoria}</small>
                 <button class="btn-remove" onclick="quitarDeEstante(${item.id})">
                     <i class="fas fa-trash-alt"></i>
                 </button>
             </div>
-            <small class="categoria-tag">${item.categoria}</small>
-            <a href="${item.url}" target="_blank" class="btn-download">Abrir</a>
+            <strong class="titulo">${item.titulo}</strong>
+            <a href="${item.url}" target="_blank" class="btn-download"><i class="fas fa-external-link"></i>Abrir</a>
         `;
         grid.appendChild(card);
     });

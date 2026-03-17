@@ -139,18 +139,15 @@ function filtrarPorCategoria(categoria) {
     } else {
         // Mapear las categorías del dropdown a los nombres en la base de datos
         const categoriaMap = {
-            'matematicas': 'Matemáticas',
-            'fisica': 'Física',
-            'quimica': 'Química',
-            'biologia': 'Biología',
-            'historia': 'Historia',
-            'geografia': 'Geografía',
-            'literatura': 'Literatura',
-            'ingles': 'Inglés',
-            'filosofia': 'Filosofía',
-            'arte': 'Arte',
-            'musica': 'Música',
-            'educacion-fisica': 'Educación Física'
+            'narrativa': 'Narrativa',
+            'ciencia ficcion': 'Ciencia Ficción',
+            'misterio y suspenso': 'Misterio y Suspenso',
+            'comics y novelas': 'Cómics y Novelas',
+            'academicos': 'Académicos',
+            'desarrollo personal': 'Desarrollo Personal',
+            'Documentales': 'documentales',
+            'comedia': 'Comedia',
+            'biblias': 'Biblias',
         };
 
         const nombreCategoria = categoriaMap[categoria] || categoria;
@@ -184,6 +181,29 @@ document.addEventListener('DOMContentLoaded', async function() {
     const { data: { session } } = await supabaseClient.auth.getSession();
     
     const ADMIN_EMAIL = 'e306711@gmail.com';
+
+    async function gestionarBotonesAdmin(session) {
+    // Busca el link de admin tanto en PC como en el menú móvil
+    const adminLinks = document.querySelectorAll('.admin-nav'); 
+    
+    const esAdmin = session?.user?.email === ADMIN_EMAIL;
+
+    adminLinks.forEach(link => {
+        if (esAdmin) {
+            link.style.display = 'flex';
+        } else {
+            link.style.display = 'none';
+        }
+    });
+}
+
+    supabaseClient.auth.onAuthStateChange((_event, session) => {
+    gestionarBotonesAdmin(session);
+});
+
+    supabaseClient.auth.getSession().then(({ data: { session } }) => {
+    gestionarBotonesAdmin(session);
+});
 
     if (adminLink) {
         if (session && session.user.email === ADMIN_EMAIL) {
@@ -261,7 +281,7 @@ function renderizar(lista) {
             <strong>${item.titulo}</strong>
             <div class="card-footer" style="margin-top: 15px;">
                 <a href="${item.url}" target="_blank" class="btn-download" style="width: 100%; text-align: center;">
-                    <i class="fas fa-external-link-alt"></i> Abrir
+                    <i class="fas fa-external-link"></i> Abrir
                 </a>
             </div>
         `;
