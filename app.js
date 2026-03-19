@@ -8,6 +8,20 @@ const loader = document.getElementById('loader');
 let todosLosRecursos = [];
 let favoritosSet = new Set(); // mantiene ids guardados por el usuario
 
+function mostrarSkeletons() {
+    const contenedor = document.getElementById('secciones-dinamicas');
+    // Creamos 3 esqueletos parecidas a carretes
+    const skeletonFila = `
+        <div class="seccion-horizontal-skeleton" style="margin-bottom: 2rem; padding: 0 1.5rem;">
+            <div class="skeleton-titulo" style="width: 200px; height: 25px; background: var(--border); border-radius: 5px; margin-bottom: 1rem;"></div>
+            <div class="carrete-falso" style="display: flex; gap: 1rem; overflow: hidden;">
+                ${'<div class="skeleton-card" style="min-width: 200px; height: 280px; background: var(--border); border-radius: 12px; opacity: 0.6;"></div>'.repeat(5)}
+            </div>
+        </div>
+    `;
+    contenedor.innerHTML = skeletonFila.repeat(3);
+}
+
 // Initialize dark mode on page load
 function initializeDarkMode() {
     const savedTheme = localStorage.getItem('theme');
@@ -31,12 +45,13 @@ document.addEventListener('DOMContentLoaded', initializeDarkMode);
 
 // obtiene la lista de recursos guardados del usuario y llena el set
 async function obtenerFavoritos() {
-    const userId = localStorage.getItem('arrecife_session_id');
-    if (!userId) return;
+    const { data: { user } } = await supabaseClient.auth.getUser();
+    if (!user) return;
+
     const { data, error } = await supabaseClient
         .from('favoritos')
         .select('recurso_id')
-        .eq('user_id', userId);
+        .eq('user_id', user.id);
 
     if (!error && data) {
         favoritosSet = new Set(data.map(f => f.recurso_id));
@@ -44,43 +59,127 @@ async function obtenerFavoritos() {
 }
 
 async function obtenerRecursos(categoria = 'todas') {
-    // Verificación de seguridad para el loader y grid
-    if (!loader || !grid) return; 
+    const dinamico = document.getElementById('secciones-dinamicas');
+    const gridOriginal = document.getElementById('grid-recursos');
 
-    loader.style.display = 'block';
-    grid.innerHTML = '';
-     
-    // Construcción de la consulta optimizada
+    // Muestra Skeletons si estamos en la vista principal
+    if (categoria === 'todas') {
+        gridOriginal.style.display = 'none';
+        dinamico.style.display = 'block';
+        mostrarSkeletons();
+    }
+
     let query = supabaseClient
         .from('recursos')
         .select('*')
-        .eq('aprobado', true); // Solo mostrar lo verificado
+        .eq('aprobado', true);
 
-    // Si no es 'todas', filtramos directamente en Supabase
     if (categoria !== 'todas') {
         query = query.eq('categoria', categoria);
     }
 
     const { data: recursos, error } = await query.order('created_at', { ascending: false });
 
-    loader.style.display = 'none';
-
     if (error) {
         console.error('Error:', error);
-
-        grid.innerHTML = '<p style="color: red;">Error al conectar con la biblioteca</p>';
         return;
     }
     
-    todosLosRecursos = recursos; 
-    
-    // Cargar favoritos antes de mostrar para que los iconos salgan marcados
+    todosLosRecursos = recursos;
+
+    // Cargar favoritos y Renderizar
     if (typeof obtenerFavoritos === "function") {
         await obtenerFavoritos();
     }
 
-    // Llamada a la renderización
-    renderizar(todosLosRecursos);
+    // Si es 'todas', usamos secciones. Si es una categoría específica, usamos el grid.
+    if (categoria === 'todas') {
+        renderizarSecciones(recursos);
+    } else {
+        dinamico.style.display = 'none';
+        gridOriginal.style.display = 'grid';
+        renderizar(recursos);
+    }
+}
+
+function renderizarSecciones(recursos) {
+    const contenedor = document.getElementById('secciones-dinamicas');
+    contenedor.innerHTML = ''; 
+
+    const config = [
+        { titulo: 'Recientes', filtro: 'recientes' },
+        { titulo: 'Narrativa', filtro: 'Narrativa' },
+        { titulo: 'Ciencia Ficción', filtro: 'Ciencia Ficción' },
+        { titulo: 'Misterio y Suspenso', filtro: 'Misterio y Suspenso' },
+        { titulo: 'Cómics y Novelas', filtro: 'Comics' }
+    ];
+
+    config.forEach(sec => {
+        let filtrados;
+        if (sec.filtro === 'recientes') {
+            filtrados = recursos.slice(0, 20);
+        } else {
+            // Usamos toLowerCase() para que coincida aunque haya diferencias de mayúsculas
+            filtrados = recursos.filter(r => 
+                r.categoria.toLowerCase().trim() === sec.filtro.toLowerCase().trim()
+            ).slice(0, 20);
+        }
+
+        if (filtrados.length > 0) {
+            const seccion = document.createElement('section');
+            seccion.className = 'seccion-biblioteca'; // Coincide con tu CSS
+            seccion.innerHTML = `
+                <div class="seccion-header">
+                    <h2>${sec.titulo}</h2>
+                </div>
+                <div class="carrete-scroll"></div>
+            `;
+            
+            const carrete = seccion.querySelector('.carrete-scroll');
+            filtrados.forEach(r => {
+                // AQUÍ: Asegúrate de que esta función exista y devuelva un elemento HTML
+                carrete.appendChild(crearTarjetaRecurso(r)); 
+            });
+            contenedor.appendChild(seccion);
+        }
+    });
+}
+
+function crearTarjetaRecurso(recurso) { // <--- Aquí se llama 'recurso'
+    const card = document.createElement('div');
+    card.className = 'recurso-card';
+    
+    // Verifica que favoritosSet exista, si no, usa un Set vacío para evitar errores
+    const esFavorito = (typeof favoritosSet !== 'undefined') ? favoritosSet.has(recurso.id) : false;
+
+    // Cambié todos los "item." por "recurso." para que coincidan con el parámetro
+    card.innerHTML = `
+        <div class="card-header">
+            <button class="btn-save ${esFavorito ? 'active' : ''}" data-id="${recurso.id}">
+                <i class="${esFavorito ? 'fas' : 'far'} fa-bookmark"></i>
+            </button>
+            <span class="categoria-tag">${recurso.categoria}</span>
+        </div>
+        <div class="recurso-info">
+            <h3 class="recurso-titulo">${recurso.titulo}</h3>
+            <p class="recurso-autor" style="margin: 0 0 15px 0;">Subido por: <strong>${recurso.usuario_nombre  || 'Invitado'}</strong></p>
+            <div class="card-footer">
+                <a href="${recurso.link_recurso}" target="_blank" class="btn-download">
+                    <i class="fas fa-book-open"></i> Leer
+                </a>
+            </div>
+        </div>
+    `;
+
+    const btnFav = card.querySelector('.btn-save');
+    if (btnFav && typeof toggleFavorito === 'function') {
+        btnFav.addEventListener('click', (e) => {
+            e.preventDefault();
+            toggleFavorito(recurso.id, btnFav);
+        });
+    }
+
+    return card;
 }
 
 // Escuchador para el buscador (ID: busqueda)
@@ -279,7 +378,7 @@ function renderizar(lista) {
                 </button>
             </div>
             <strong>${item.titulo}</strong>
-            <div class="card-footer" style="margin-top: 15px;">
+            <div class="card-footer" style="margin-top: 7px;">
                 <a href="${item.url}" target="_blank" class="btn-download" style="width: 100%; text-align: center;">
                     <i class="fas fa-external-link"></i> Abrir
                 </a>
@@ -347,7 +446,8 @@ async function guardarEnEstante(recursoId, boton) {
     }
 }
 
-obtenerRecursos();
+obtenerRecursos(); // no se si esto es necesario
+
 // Mobile Menu Functionality
 document.addEventListener("DOMContentLoaded", function() {
     const hamburgerBtn = document.getElementById("hamburger-btn");

@@ -54,7 +54,7 @@ function renderizarEstante(lista) {
                     <i class="fas fa-trash-alt"></i>
                 </button>
             </div>
-            <strong class="titulo">${item.titulo}</strong>
+            <strong>${item.titulo}</strong>
             <a href="${item.url}" target="_blank" class="btn-download"><i class="fas fa-external-link"></i>Abrir</a>
         `;
         grid.appendChild(card);

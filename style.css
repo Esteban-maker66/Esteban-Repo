@@ -13,6 +13,7 @@
     --option: #f1f5f9;
     --option2: #dcdcdc;
     --hover: rgba(254, 254, 254, 0.9);
+    --dividor: rgb(86, 86, 86);
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -28,6 +29,7 @@ body.dark-mode {
     --option: #334155;
     --option2: #475569;
     --hover: rgba(254, 254, 254, 0.9);
+    --dividor: rgb(170, 170, 170);
 }
 
 body {
@@ -80,6 +82,9 @@ header h1 {
     font-weight: 600;
     margin: 0;
     text-shadow: rgba(0, 0, 0, 0.419) 0 0.1rem 0.3rem;
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
 }
 
 .header-center {
@@ -347,7 +352,7 @@ input:checked + .slider:before {
     font-size: 1.5rem;
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 10px;
     text-shadow: rgba(0, 0, 0, 0.7) 0 0 0.5rem;
 }
 
@@ -486,7 +491,10 @@ input:checked + .slider:before {
     font-size: 1rem;
     font-weight: 600;
     transition: all 0.3s ease;
-    align-self: flex-start;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 5px auto;
 }
 
 #btn-guardar:disabled {
@@ -494,6 +502,10 @@ input:checked + .slider:before {
     cursor: not-allowed;
     opacity: 0.6;
     box-shadow: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 5px auto;
 }
 
 #btn-guardar:active {
@@ -533,7 +545,7 @@ main {
     margin: 0 auto;
 }
 
-.libro-card {
+.recurso-card {
     background: var(--surface);
     border-radius: 16px;
     padding: 0.8rem;
@@ -547,24 +559,24 @@ main {
     max-width: fill-available;
 }
 
-.libro-card:active {
+.recurso-card:active {
     transform: scale(0.99);
 }
 
-.libro-card > strong {
+.recurso-card > strong {
     font-size: 0.9rem;
     font-weight: 600;
     display: block;
 }
 
-.libro-card > small {
+.recurso-card > small {
     color: var(--text-muted);
     font-size: 0.875rem;
     margin-bottom: 1rem;
     display: block;
 }
 
-.libro-card .btn-download {
+.recurso-card .btn-download {
     align-items: center;
     margin-top: auto;
 }
@@ -601,7 +613,7 @@ main {
 
 /* Animations */
 
-.libro-card {
+.recurso-card {
     animation: fadeIn 0.5s ease-out;
 }
 
@@ -647,7 +659,7 @@ input:checked + .slider:before {
     }
 }
 
-.libro-card {
+.recurso-card {
     animation: fadeIn 0.5s ease-in;
 }
 
@@ -737,6 +749,9 @@ input:checked + .slider:before {
     .mobile-menu{
         max-width: min-content;
     }
+    .form-section {
+        transform: scale(0.90);
+    }
 }
 
 @media (max-width: 480px) {
@@ -747,10 +762,6 @@ input:checked + .slider:before {
 
     .header-main {
         gap: 0.75rem;
-    }
-
-    header h1 {
-        font-size: 1px;
     }
 
     .logo {
@@ -769,6 +780,10 @@ input:checked + .slider:before {
         gap: 0.75rem;
         grid-template: repeat(auto-fill, minmax(173px, 1fr));
     }
+    .form-section {
+        transform: scale(0.90);
+    }
+    
 }
 
 @media (max-width: 390px) {
@@ -789,20 +804,13 @@ input:checked + .slider:before {
     }
 }
 
-.libro-card {
+.recurso-card {
     animation: fadeIn 0.5s ease-out;
 
 }
 
-/* Loading animation */
-#loader {
-    text-align: center;
-    padding: 2rem;
-    color: var(--text-muted);
-    font-size: 1.1rem;
-}   
 /* Card organization */
-.libro-card .card-header {
+.recurso-card .card-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -810,7 +818,7 @@ input:checked + .slider:before {
 
 }
 
-.libro-card .categoria-tag {
+.recurso-card .categoria-tag {
     background: var(--border);
     color: var(--text-muted);
     padding: 0.15rem 0.55rem;
@@ -821,6 +829,8 @@ input:checked + .slider:before {
     width: fit-content;
     border: 1px solid rgba(128, 128, 128, 0.231);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 1rem;
+    display: inline-block;
 }
 
 .btn-remove {
@@ -838,17 +848,11 @@ input:checked + .slider:before {
 
 
 /* Title within card header */
-.libro-card .titulo {
+.recurso-card .titulo {
     font-size: 1.1rem;
     font-weight: 600;
     color: var(--text);
     
-}
-
-
-.libro-card .categoria-tag {
-    margin-bottom: 1rem;
-    display: inline-block;
 }
 
 
@@ -960,6 +964,8 @@ input:checked + .slider:before {
 .mobile-dropdown-btn {
     display: flex;
     align-items: center;
+    justify-content: start;
+    margin: 1px auto;
     gap: 1rem;
     padding: 1rem;
     color: var(--text);
@@ -968,19 +974,25 @@ input:checked + .slider:before {
     transition: 0.2s ease;
     font-weight: 500;
     margin-bottom: 0.5rem;
+    background: var(--background);
+    border: 2px solid var(--border);
+}
 
+.mobile-dropdown-btn:active {
+    transform: scale(0.90);
 }
 
 .mobile-dropdown-content {
-    margin-left: 2rem;
-    margin-top: 0.5rem;
+    margin-top: 1rem;
     display: none;
+    
 }
 
 .mobile-dropdown-content a {
     padding: 0.75rem 1rem;
-    font-size: 0.9rem;
+    font-size: 0.7rem;
     margin-bottom: 0.25rem;
+    border: 2px solid var(--border);
 }
 
 .mobile-dropdown.active .mobile-dropdown-content {
@@ -989,7 +1001,7 @@ input:checked + .slider:before {
 
 .mobile-dropdown-btn i:last-child {
     margin-left: auto;
-    transition: transform 0.3s ease;
+    transition: 0.3s ease;
 }
 
 .mobile-dropdown.active .mobile-dropdown-btn i:last-child {
@@ -1209,7 +1221,7 @@ header.search-expanded {
     cursor: pointer;
 }
 
-.libro-card.pendiente {
+.recurso-card.pendiente {
     border: 2px dashed var(--accent); /* Para diferenciar lo que no es público aún */
 }
 .fas.fa-bookmark{
@@ -1228,6 +1240,7 @@ header.search-expanded {
     border-radius: 20px;
     box-shadow: 0 15px 35px var(--shadow);
     border: 1px solid var(--border);
+
 }
 
 .form-section h2 {
@@ -1235,6 +1248,7 @@ header.search-expanded {
     color: var(--primary);
     text-align: center;
     font-size: 1.5rem;
+    
 }
 
 #form-recurso {
@@ -1384,11 +1398,11 @@ header.search-expanded {
 .no-selected {
     color: var(--text-muted);
 }
-.fas.fa-chevron-down.dropdown-arrow{
+.fas.fa-chevron-down.dropdown-arrow {
     color: rgb(216, 216, 216)
 }
 
-.btn-logout{
+.btn-logout {
     color: var(--primary);
     border: 2px solid var(--border);
     background: transparent;
@@ -1406,39 +1420,39 @@ header.search-expanded {
     margin-bottom: 0;
 }
 
-.btn-logout.active{
+.btn-logout.active {
     transform: scale(0.80);
 }
 
-.btn-login-google{
+.btn-login-google {
     display: flex;
     align-items: center;
     margin: 20px auto;
 }
 
-#google{
+#google {
     display: none;
 }
 
-.protip{
+.protip {
     display: flex;
     align-items: center;
     margin: 5px 0 30px 10px;
     color: var(--text-muted);
 }
 
-#user-name{
+#user-name {
     display: flex;
     justify-content: center;
     font-weight: lighter;
     font-size: xx-large;
 }
 
-#user-email{
+#user-email {
     display: none;
 }
 
-.logo2{
+.logo2 {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1447,7 +1461,7 @@ header.search-expanded {
     transform: scale(1.05);
 }
 
-.preferences{
+.preferences {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1455,7 +1469,85 @@ header.search-expanded {
     gap: 10px;
 }
 
-.libro-card.pendiente{
+.recurso-card.pendiente {
     min-width: 170px;
     max-width: none;
+}
+
+.dividor{
+    margin: 2rem auto;
+    color: var(--dividor);
+}
+
+.seccion-biblioteca {
+    margin: 1.5rem 0 0.5rem 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.seccion-header h2 {
+    font-size: 1.6rem;
+    font-weight: 700;
+    padding: 0 1.5rem;
+    margin-bottom: 0.5rem;
+    color: var(--text);
+    text-transform: capitalize;
+}
+
+#secciones-dinamicas {
+    display: block;
+    width: 100%;
+    min-height: 200px;
+}
+
+.seccion-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    padding: 0 1.5rem;
+}
+
+.carrete-scroll {
+    display: flex;
+    overflow-x: auto;
+    gap: 1.5rem;
+    padding: 1rem 1.5rem;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+
+}
+
+.carrete-scroll .recurso-card {
+    min-width: 200px; 
+    max-width: 200px;
+    flex: 0 0 auto;
+    margin-bottom: 10px;
+}
+
+.carrete-scroll::-webkit-scrollbar { display: none; }
+
+.skeleton-card {
+    min-width: 200px;
+    height: 300px;
+    background: var(--border);
+    border-radius: 12px;
+    animation: skeleton-blink 0.2s infinite alternate;
+}
+
+@keyframes skeleton-blink {
+    from { opacity: 0.4; }
+    to { opacity: 0.8; }
+}
+
+.seccion-horizontal .recurso-card {
+    min-width: 220px; 
+    max-width: 220px;
+    flex: 0 0 auto;
+}
+
+.seccion-horizontal-skeleton {
+    width: 100%;
+    display: block;
 }

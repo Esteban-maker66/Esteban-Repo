@@ -11,7 +11,7 @@
     <meta name="author" content="Esteban David">
 
     <meta property="og:title" content="Arrecife Digital 🌊">
-    <meta property="og:description" content="Explora y colabora en la biblioteca digital más completa.">
+    <meta property="og:description" content="Explora y colabora en la biblioteca digital del Centro Educativo Mar Azul.">
     <meta property="og:image" content="assets/logopng.webp"> <meta property="og:url" content="https://ArrecifeDigital.vercel.app">
     <meta property="og:type" content="website">
 
@@ -138,6 +138,7 @@
                         <a href="#" onclick="filtrarPorCategoria('todas'); closeMobileMenu();">
                             <i class="fas fa-th-large"></i> Todas las categorías
                         </a>
+                        <hr class="dividor">
                     </div>
                 </div>
                 <a href="estante.html" onclick="closeMobileMenu();">
@@ -157,8 +158,9 @@
     </div>
 
     <main id="main-container">
-        <div id="loader">Cargando...</div>
-        <div id="grid-recursos" class="grid-layout"></div>
+        <div id="loader" style="display: none;"></div>
+        <div id="secciones-dinamicas" class="grid-layout"></div>
+        <div id="grid-recursos" class="grid-layout" style="display: none;"></div>
     </main>
 
     <div id="toast-container"></div>
