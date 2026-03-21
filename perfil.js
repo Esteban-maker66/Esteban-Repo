@@ -75,7 +75,7 @@ async function loginConGoogle() {
     const { error } = await supabaseClient.auth.signInWithOAuth({
         provider: 'google',
         options: {
-            redirectTo: window.location.origin + '/perfil.html'
+            redirectTo: window.location.origin + '/index.html'
         }
     });
     if (error) alert("Error al conectar: " + error.message);

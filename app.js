@@ -8,6 +8,35 @@ const loader = document.getElementById('loader');
 let todosLosRecursos = [];
 let favoritosSet = new Set(); // mantiene ids guardados por el usuario
 
+function gestionarPantalla(modoBusqueda) {
+    const secciones = document.getElementById('secciones-dinamicas');
+    const resultados = document.getElementById('grid-recursos');
+    const footer = document.getElementById('main-footer');
+
+    if (modoBusqueda) {
+        if (secciones) secciones.style.display = 'none';
+        if (resultados) resultados.style.display = 'grid';
+        if (footer) footer.style.display = 'none';
+    } else {
+        if (secciones) secciones.style.display = 'block';
+        if (resultados) resultados.style.display = 'none';
+        if (footer) footer.style.display = 'block';
+    }
+}
+
+async function obtenerUserId() {
+    const { data: { user } } = await supabaseClient.auth.getUser();
+    if (user) return user.id;
+    
+    let localId = localStorage.getItem('arrecife_session_id');
+    if (!localId) {
+        // Usamos un nombre simple y guardamos
+        localId = 'anon_' + Math.random().toString(36).slice(2, 11);
+        localStorage.setItem('arrecife_session_id', localId);
+    }
+    return localId;
+}
+
 function mostrarSkeletons() {
     const contenedor = document.getElementById('secciones-dinamicas');
     // Creamos 3 esqueletos parecidas a carretes
@@ -47,7 +76,7 @@ document.addEventListener('DOMContentLoaded', initializeDarkMode);
 async function obtenerFavoritos() {
     const { data: { user } } = await supabaseClient.auth.getUser();
     if (!user) return;
-
+    const userId = await obtenerUserId();
     const { data, error } = await supabaseClient
         .from('favoritos')
         .select('recurso_id')
@@ -107,21 +136,21 @@ function renderizarSecciones(recursos) {
     contenedor.innerHTML = ''; 
 
     const config = [
-        { titulo: 'Recientes', filtro: 'recientes' },
-        { titulo: 'Narrativa', filtro: 'Narrativa' },
-        { titulo: 'Ciencia Ficción', filtro: 'Ciencia Ficción' },
-        { titulo: 'Misterio y Suspenso', filtro: 'Misterio y Suspenso' },
-        { titulo: 'Cómics y Novelas', filtro: 'Comics' }
+        { titulo: '📖 libros Recientes', filtro: 'Recientes' },
+        { titulo: '🏷️ La Narrativa..', filtro: 'Narrativa' },
+        { titulo: '⚡ Ciencias Ficciónes..', filtro: 'Ciencia Ficción' },
+        { titulo: '🔍 Misterio y Suspenso..', filtro: 'Misterio y Suspenso' },
+        { titulo: '🔖 Los Cómics y Novelas..', filtro: 'Cómics Y Novelas' }
     ];
 
     config.forEach(sec => {
         let filtrados;
-        if (sec.filtro === 'recientes') {
+        if (sec.filtro === 'Recientes') {
             filtrados = recursos.slice(0, 20);
         } else {
             // Usamos toLowerCase() para que coincida aunque haya diferencias de mayúsculas
-            filtrados = recursos.filter(r => 
-                r.categoria.toLowerCase().trim() === sec.filtro.toLowerCase().trim()
+            filtrados = recursos.filter(recurso => 
+                recurso.categoria.toLowerCase().trim() === sec.filtro.toLowerCase().trim()
             ).slice(0, 20);
         }
 
@@ -136,27 +165,27 @@ function renderizarSecciones(recursos) {
             `;
             
             const carrete = seccion.querySelector('.carrete-scroll');
-            filtrados.forEach(r => {
+            filtrados.forEach(recurso => {
                 // AQUÍ: Asegúrate de que esta función exista y devuelva un elemento HTML
-                carrete.appendChild(crearTarjetaRecurso(r)); 
+                carrete.appendChild(crearTarjetaRecurso(recurso)); 
             });
             contenedor.appendChild(seccion);
         }
     });
 }
 
-function crearTarjetaRecurso(recurso) { // <--- Aquí se llama 'recurso'
+function crearTarjetaRecurso(recurso) {
     const card = document.createElement('div');
     card.className = 'recurso-card';
     
-    // Verifica que favoritosSet exista, si no, usa un Set vacío para evitar errores
     const esFavorito = (typeof favoritosSet !== 'undefined') ? favoritosSet.has(recurso.id) : false;
+    const iconClass = esFavorito ? 'fas' : 'far';
 
-    // Cambié todos los "item." por "recurso." para que coincidan con el parámetro
     card.innerHTML = `
         <div class="card-header">
-            <button class="btn-save ${esFavorito ? 'active' : ''}" data-id="${recurso.id}">
-                <i class="${esFavorito ? 'fas' : 'far'} fa-bookmark"></i>
+            <button class="btn-save ${esFavorito ? 'saved' : ''}" 
+                    onclick="guardarEnEstante(${recurso.id}, this)">
+                <i class="${iconClass} fa-bookmark"></i>
             </button>
             <span class="categoria-tag">${recurso.categoria}</span>
         </div>
@@ -164,52 +193,66 @@ function crearTarjetaRecurso(recurso) { // <--- Aquí se llama 'recurso'
             <h3 class="recurso-titulo">${recurso.titulo}</h3>
             <p class="recurso-autor" style="margin: 0 0 15px 0;">Subido por: <strong>${recurso.usuario_nombre  || 'Invitado'}</strong></p>
             <div class="card-footer">
-                <a href="${recurso.link_recurso}" target="_blank" class="btn-download">
+                <a href="${recurso.url}" target="_blank" class="btn-download">
                     <i class="fas fa-book-open"></i> Leer
                 </a>
             </div>
         </div>
     `;
 
-    const btnFav = card.querySelector('.btn-save');
-    if (btnFav && typeof toggleFavorito === 'function') {
-        btnFav.addEventListener('click', (e) => {
-            e.preventDefault();
-            toggleFavorito(recurso.id, btnFav);
-        });
-    }
-
     return card;
 }
 
-// Escuchador para el buscador (ID: busqueda)
+
 const inputBusqueda = document.getElementById('busqueda');
-if(inputBusqueda) {
+
+if (inputBusqueda) {
     inputBusqueda.addEventListener('input', (e) => {
-        const termino = e.target.value.toLowerCase();
+        const termino = e.target.value.toLowerCase().trim();
         
-        const filtrados = todosLosRecursos.filter(item => 
-            item.titulo.toLowerCase().includes(termino) || 
-            item.categoria.toLowerCase().includes(termino)
-        );
-        
-        renderizar(filtrados);
+        if (termino.length >= 1) {
+            
+            const filtrados = todosLosRecursos.filter(recurso => 
+                recurso.titulo.toLowerCase().includes(termino) || 
+                recurso.categoria.toLowerCase().includes(termino)
+            );
+            gestionarPantalla(true); 
+            renderizar(filtrados);
+        } else if (termino.length === 0) {
+         
+            gestionarPantalla(false);
+        }
+    
+    });
+
+
+    inputBusqueda.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            const termino = e.target.value.toLowerCase().trim();
+            if(termino.length > 10) ejecutarBusqueda(termino);
+        }
     });
 }
 
-function renderizar(lista) {
-    grid.innerHTML = '';
+function ejecutarBusqueda(termino) {
 
-    lista.forEach(item => {
-        const card = document.createElement('div');
-        card.className = 'libro-card';
-        card.innerHTML = `
-            <strong>${item.titulo}</strong>
-            <small>${item.categoria}</small>
-            <a href="${item.url}" target="_blank" class="btn-download">Abrir</a>
-        `;
-        grid.appendChild(card);
-    });
+    toggleVistaBusqueda(true);
+
+    // Ocultar las secciones horizontales y mostrar el Grid de resultados
+    if (dinamico) dinamico.style.display = 'none';
+    if (footer) footer.style.display = 'none'; 
+    if (gridOriginal) gridOriginal.style.display = 'grid';
+
+    // Filtrar
+    const filtrados = todosLosRecursos.filter(recurso => 
+        recurso.titulo.toLowerCase().includes(termino) || 
+        recurso.categoria.toLowerCase().includes(termino)
+    );
+    
+    renderizar(filtrados);
+
+    // Scroll suave para ver los resultados
+    gridOriginal.scrollIntoView({ behavior: 'smooth' });
 }
 
 const toggleSwitch = document.querySelector('#checkbox');
@@ -229,13 +272,17 @@ if (toggleSwitch) {
 
 
 function filtrarPorCategoria(categoria) {
+    const dinamico = document.getElementById('secciones-dinamicas');
+    const gridOriginal = document.getElementById('grid-recursos');
     const inputBusqueda = document.getElementById('busqueda');
 
     if (categoria === 'todas') {
-        // Mostrar todos los recursos
-        inputBusqueda.value = '';
-        renderizar(todosLosRecursos);
-    } else {
+        toggleVistaBusqueda(false);
+        obtenerRecursos('todas');
+    }
+
+     else {
+        toggleVistaBusqueda(true);
         // Mapear las categorías del dropdown a los nombres en la base de datos
         const categoriaMap = {
             'narrativa': 'Narrativa',
@@ -244,23 +291,40 @@ function filtrarPorCategoria(categoria) {
             'comics y novelas': 'Cómics y Novelas',
             'academicos': 'Académicos',
             'desarrollo personal': 'Desarrollo Personal',
-            'Documentales': 'documentales',
+            'documentales': 'Documentales',
             'comedia': 'Comedia',
             'biblias': 'Biblias',
         };
 
         const nombreCategoria = categoriaMap[categoria] || categoria;
 
+        dinamico.style.display = 'none';
+        gridOriginal.style.display = 'grid';
+        gridOriginal.innerHTML = '';
+
         // Filtrar por categoría exacta
-        const filtrados = todosLosRecursos.filter(item =>
-            item.categoria.toLowerCase() === nombreCategoria.toLowerCase()
+        const filtrados = todosLosRecursos.filter(recurso =>
+            recurso.categoria.toLowerCase().trim() === nombreCategoria.toLowerCase().trim()
         );
 
-        // Actualizar el campo de búsqueda para mostrar la categoría seleccionada
-        inputBusqueda.value = nombreCategoria;
+        const titulo = document.createElement('h2');
+    titulo.style.cssText = "grid-column: 1/-1; margin: 20px 0; color: var(--text); font-size: 1.5rem;";
+    titulo.innerText = `Resultados para: ${nombreCategoria}`;
+    gridOriginal.appendChild(titulo);
 
-        renderizar(filtrados);
+    if (filtrados.length === 0) {
+        gridOriginal.innerHTML += `<p style="grid-column: 1/-1; text-align: center; padding: 2rem;">No hay recursos en esta categoría todavía. 🌊</p>`;
+    } else {
+        filtrados.forEach(recurso => {
+            gridOriginal.appendChild(crearTarjetaRecurso(recurso));
+        });
     }
+
+    // 7. Feedback visual
+    inputBusqueda.value = nombreCategoria;
+    gridOriginal.scrollIntoView({ behavior: 'smooth' });
+
+}
 
     // Scroll suave hacia los resultados
     document.getElementById('grid-recursos').scrollIntoView({ behavior: 'smooth' });
@@ -351,56 +415,41 @@ document.addEventListener('DOMContentLoaded', async function() {
 });
 
 function renderizar(lista) {
-    const grid = document.getElementById('grid-recursos');
-    const loader = document.getElementById('loader');
+    const gridOriginal = document.getElementById('grid-recursos');
+    if (!gridOriginal) return;
     
-    if (!grid) return;
-    grid.innerHTML = '';
+    gridOriginal.innerHTML = '';
 
     if (lista.length === 0) {
-        grid.innerHTML = `<p class="not-found" style="grid-column: 1/-1; text-align: center;">No hay recursos en tu busqueda... 🌊</p>`;
-        if (loader) loader.classList.add('hidden');
+        gridOriginal.innerHTML = `
+            <div class="busqueda-vacia" style="grid-column: 1/-1; text-align: center; padding: 4rem 1rem;">
+                <i class="fas fa-search-minus" style="font-size: 3rem; color: var(--text-muted); margin-bottom: 1rem;"></i>
+                <p>No encontramos resultados para tu búsqueda... 🌊</p>
+            </div>`;
         return;
     }
 
-    lista.forEach(item => {
-        const card = document.createElement('div');
-        card.className = 'libro-card';
-        
-        const saved = favoritosSet.has(item.id);
-        const iconClass = saved ? 'fas' : 'far';
+    // Título de resultados
+    const titulo = document.createElement('h2');
+    titulo.style.cssText = "grid-column: 1/-1; margin: 20px 0; color: var(--text); font-size: 1.5rem;";
+    titulo.innerText = `Resultados encontrados:`;
+    gridOriginal.appendChild(titulo);
 
-        card.innerHTML = `
-            <div class="card-header">
-                <span class="categoria-tag">${item.categoria || 'Sin categoría'}</span>
-                <button class="btn-save ${saved ? 'saved' : ''}" onclick="guardarEnEstante(${item.id}, this)">
-                    <i class="${iconClass} fa-bookmark"></i>
-                </button>
-            </div>
-            <strong>${item.titulo}</strong>
-            <div class="card-footer" style="margin-top: 7px;">
-                <a href="${item.url}" target="_blank" class="btn-download" style="width: 100%; text-align: center;">
-                    <i class="fas fa-external-link"></i> Abrir
-                </a>
-            </div>
-        `;
-        grid.appendChild(card);
+    // Renderizar cada tarjeta con el diseño moderno
+    lista.forEach(recurso => { 
+        gridOriginal.appendChild(crearTarjetaRecurso(recurso));
     });
-
-
-    if (loader) loader.classList.add('hidden');
 }
 
+async function guardarEnEstante(recursoId, btn) {
+    console.log("Iniciando guardado para recurso:", recursoId);
+    const userId = await obtenerUserId();
+    console.log("Usuario actual:", userId);
 
-async function guardarEnEstante(recursoId, boton) {
-    let userId = localStorage.getItem('arrecife_session_id');
-    if (!userId) {
-        userId = 'user_' + Math.random().toString(36).substr(2, 9);
-        localStorage.setItem('arrecife_session_id', userId);
-    }
+    const esFavorito = favoritosSet.has(recursoId);
 
-    // si ya está guardado, lo elimina en lugar de insertarlo
-    if (favoritosSet.has(recursoId)) {
+    if (esFavorito) {
+        console.log("El recurso ya es favorito. Intentando eliminar...");
         const { error } = await supabaseClient
             .from('favoritos')
             .delete()
@@ -408,45 +457,34 @@ async function guardarEnEstante(recursoId, boton) {
             .eq('recurso_id', recursoId);
 
         if (error) {
-            console.error('Error al eliminar:', error);
-            notificar('No se pudo quitar del estante...', 'error');
+            console.error("Error al eliminar:", error.message);
         } else {
-            // actualizar UI
             favoritosSet.delete(recursoId);
-            boton.classList.remove('saved');
-            const icon = boton.querySelector('i');
-            if (icon) icon.classList.replace('fas', 'far');
-            notificar('Eliminado de Mi Estante 🗑️');
-        }
-        return;
-    }
-
-    const { data, error } = await supabaseClient
-        .from('favoritos')
-        .insert([{ user_id: userId, recurso_id: recursoId }]);
-
-    if (error) {
-        if (error.code === '23505') {
-            favoritosSet.add(recursoId);
-            const icon = boton.querySelector('i');
-            if (icon) icon.classList.replace('far', 'fas');
-            boton.classList.add('saved');
-            notificar("¡Este libro ya está en tu estante! ✨");
-        } else {
-            console.error("Error al guardar:", error);
-            notificar("¡Inicia sesion para esta funcion!");
+            btn.classList.remove('saved');
+            btn.querySelector('i').className = 'far fa-bookmark';
+            notificar("Quitado del estante", "info");
         }
     } else {
-        // Cambiamos el icono para dar feedback visual
-        const icon = boton.querySelector('i');
-        if (icon) icon.classList.replace('far', 'fas'); // De borde a relleno
-        boton.classList.add('saved');
-        favoritosSet.add(recursoId);
-        notificar("¡Guardado en Mi Estante! 📚");
+        console.log("Intentando insertar en Supabase...");
+        const { data, error } = await supabaseClient
+            .from('favoritos')
+            .insert([{ user_id: userId, recurso_id: recursoId }]);
+
+        if (error) {
+            console.error("Error detallado de Supabase:", error.message);
+            console.error("Código de error:", error.code);
+            notificar("Error al guardar: " + error.message, "error");
+        } else {
+            console.log("¡Inserción exitosa!", data);
+            favoritosSet.add(recursoId);
+            btn.classList.add('saved');
+            btn.querySelector('i').className = 'fas fa-bookmark';
+            notificar("¡Guardado en tu estante!", "success");
+        }
     }
 }
 
-obtenerRecursos(); // no se si esto es necesario
+obtenerRecursos();
 
 // Mobile Menu Functionality
 document.addEventListener("DOMContentLoaded", function() {
@@ -527,11 +565,58 @@ function notificar(mensaje, tipo = 'info') {
     
     container.appendChild(toast);
 
-    // Desaparece después de 5 segundos
     setTimeout(() => {
         toast.style.opacity = '0';
         toast.style.transform = 'translateX(100%)';
         toast.style.transition = 'all 0.3s ease';
         setTimeout(() => toast.remove(), 300);
     }, 3600);
+}// Asegúrate de que esto esté al final del archivo o fuera de cualquier llaves { }
+window.guardarEnEstante = async function(recursoId, btn) {
+    console.log("¡Botón detectado!");
+    alert("Presionaste el recurso: " + recursoId);
+    
+    const userId = await obtenerUserId();
+    
+    if (favoritosSet.has(recursoId)) {
+        const { error } = await supabaseClient
+            .from('favoritos')
+            .delete()
+            .eq('user_id', userId)
+            .eq('recurso_id', recursoId);
+
+        if (!error) {
+            favoritosSet.delete(recursoId);
+            btn.classList.remove('saved');
+            btn.querySelector('i').className = 'far fa-bookmark';
+        }
+    } else {
+        const { error } = await supabaseClient
+            .from('favoritos')
+            .insert([{ user_id: userId, recurso_id: recursoId }]);
+
+        if (!error) {
+            favoritosSet.add(recursoId);
+            btn.classList.add('saved');
+            btn.querySelector('i').className = 'fas fa-bookmark';
+        }
+    }
+};
+
+function toggleVistaBusqueda(activa) {
+    const dinamico = document.getElementById('secciones-dinamicas');
+    const gridOriginal = document.getElementById('grid-recursos');
+    const footer = document.getElementById('main-footer');
+
+    if (activa) {
+        
+        if (dinamico) dinamico.style.display = 'none';
+        if (gridOriginal) gridOriginal.style.display = 'grid';
+        if (footer) footer.style.setProperty('display', 'none', 'important');
+    } else {
+
+        if (dinamico) dinamico.style.display = 'block';
+        if (gridOriginal) gridOriginal.style.display = 'none';
+        if (footer) footer.style.setProperty('display', 'block', 'important');
+    }
 }

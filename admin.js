@@ -160,7 +160,7 @@ async function cargarPendientes(recursos) {
         card.innerHTML = `
         <div class="card-info">
             <strong>${recurso.titulo}</strong>
-            <small>${recurso.categoria}</small>
+            <small>(${recurso.categoria})</small>
             <div class="meta-info" style="font-size: 0.7rem; color: var(--text-muted); margin-top: 5px;">
                 <span><i class="fas fa-user"></i> ${recurso.usuario_nombre || 'Usuario'}</span><br>
                 <span><i class="fas fa-calendar"></i> ${new Date(recurso.created_at).toLocaleDateString()}</span>
@@ -173,6 +173,9 @@ async function cargarPendientes(recursos) {
                 <button onclick="eliminarRecurso(${recurso.id})" class="btn-delete">
                     <i class="fas fa-trash"></i> Rechazar
                 </button>
+                <a href="${recurso.url}" target="_blank" class="btn-inspecc">
+                    <i class="fas fa-search"></i> inspeccionar
+                </a>
             </div>
         `;
         contenedor.appendChild(card);
