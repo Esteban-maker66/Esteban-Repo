@@ -156,7 +156,7 @@ async function cargarPendientes(recursos) {
 
         const fecha = new Date(recurso.created_at).toLocaleDateString();
         const card = document.createElement('div');
-        card.className = 'libro-card pendiente';
+        card.className = 'recurso-card2 pendiente';
         card.innerHTML = `
         <div class="card-info">
             <strong>${recurso.titulo}</strong>
@@ -185,9 +185,12 @@ async function cargarPendientes(recursos) {
 
 // Función para aprobar (Update)
 async function aprobarRecurso(id) {
+    const confirmar = await mostrarConfirmacion(
+        "¿Aprobar Recurso?", 
+        "Pasará a estar visible para todos los estudiantes."
+    );
 
-    if(!confirm("¿Aprobar este recurso? Pasará a estar visible para todos.")) return;
-
+    if(!confirmar) return;
     const { error } = await supabaseClient
         .from('recursos')
         .update({ aprobado: true })
@@ -204,8 +207,12 @@ async function aprobarRecurso(id) {
 
 // Función para eliminar/rechazar (Delete)
 async function eliminarRecurso(id) {
-    if(!confirm("¿rechazar y borrar este recurso?")) return;
-
+    const confirmar = await mostrarConfirmacion(
+        "¿Rechazar Recurso?", 
+        "No sera visible para todos los estudiantes."
+    );
+    
+    if(!confirmar) return;
     const { error } = await supabaseClient
         .from('recursos')
         .delete()
@@ -228,4 +235,27 @@ async function protegerAdmin() {
     if (!user || user.email !== 'e306711@gmail.com') {
         window.location.href = 'index.html';
     }
+}
+
+function mostrarConfirmacion(titulo, mensaje) {
+    return new Promise((resolve) => {
+        const modal = document.getElementById('custom-confirm');
+        const btnAceptar = document.getElementById('confirm-accept');
+        const btnCancelar = document.getElementById('confirm-cancel');
+        
+        document.getElementById('confirm-title').innerText = titulo;
+        document.getElementById('confirm-msg').innerText = mensaje;
+        
+        modal.classList.add('active');
+
+        const cerrar = (resultado) => {
+            modal.classList.remove('active');
+            resolve(resultado);
+        };
+
+        btnAceptar.onclick = () => cerrar(true);
+        btnCancelar.onclick = () => cerrar(false);
+        // Cerrar si hace clic fuera
+        modal.onclick = (e) => { if(e.target === modal) cerrar(false); };
+    });
 }

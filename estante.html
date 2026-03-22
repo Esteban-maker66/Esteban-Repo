@@ -10,7 +10,7 @@
 </head>
 <body>
     <header>
-        <div class="header-main">
+        <div class="header-main2">
             <div class="header-left">
                 <h1><i class="fas fa-bookmark"></i>Mi Estante</h1>
             </div>
@@ -26,6 +26,21 @@
         <div id="grid-recursos" class="grid-layout"></div>
     </main>
     <div id="toast-container"></div>
+
+    <div id="custom-confirm" class="modal-overlay">
+    <div class="modal-content">
+        <div class="modal-icon">
+            <i class="fas fa-exclamation-circle"></i>
+        </div>
+        <h3 id="confirm-title">¿Estás seguro?</h3>
+        <p id="confirm-msg">Esta acción no es reversible.</p>
+        <div class="modal-buttons">
+            <button id="confirm-cancel" class="btn-modal-secondary">Cancelar</button>
+            <button id="confirm-accept" class="btn-modal-primary">Confirmar</button>
+        </div>
+    </div>
+</div>
+
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="estante.js"></script>
 </body>

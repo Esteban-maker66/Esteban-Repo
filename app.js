@@ -44,7 +44,7 @@ function mostrarSkeletons() {
         <div class="seccion-horizontal-skeleton" style="margin-bottom: 2rem; padding: 0 1.5rem;">
             <div class="skeleton-titulo" style="width: 200px; height: 25px; background: var(--border); border-radius: 5px; margin-bottom: 1rem;"></div>
             <div class="carrete-falso" style="display: flex; gap: 1rem; overflow: hidden;">
-                ${'<div class="skeleton-card" style="min-width: 200px; height: 280px; background: var(--border); border-radius: 12px; opacity: 0.6;"></div>'.repeat(5)}
+                ${'<div class="skeleton-card" style="min-width: 200px; height: 150px; background: var(--border); border-radius: 12px; opacity: 0.6; "></div>'.repeat(5)}
             </div>
         </div>
     `;
@@ -146,12 +146,12 @@ function renderizarSecciones(recursos) {
     config.forEach(sec => {
         let filtrados;
         if (sec.filtro === 'Recientes') {
-            filtrados = recursos.slice(0, 20);
+            filtrados = recursos.slice(0, 50);
         } else {
             // Usamos toLowerCase() para que coincida aunque haya diferencias de mayúsculas
             filtrados = recursos.filter(recurso => 
                 recurso.categoria.toLowerCase().trim() === sec.filtro.toLowerCase().trim()
-            ).slice(0, 20);
+            ).slice(0, 50);
         }
 
         if (filtrados.length > 0) {
@@ -161,8 +161,7 @@ function renderizarSecciones(recursos) {
                 <div class="seccion-header">
                     <h2>${sec.titulo}</h2>
                 </div>
-                <div class="carrete-scroll"></div>
-            `;
+                <div class="carrete-scroll"></div>`;
             
             const carrete = seccion.querySelector('.carrete-scroll');
             filtrados.forEach(recurso => {
@@ -559,7 +558,6 @@ function notificar(mensaje, tipo = 'info') {
     const icon = tipo === 'success' ? 'fa-check-circle' : 'fa-info-circle';
     
     toast.innerHTML = `
-        <i class="fas ${icon}"></i>
         <span>${mensaje}</span>
     `;
     
@@ -571,13 +569,13 @@ function notificar(mensaje, tipo = 'info') {
         toast.style.transition = 'all 0.3s ease';
         setTimeout(() => toast.remove(), 300);
     }, 3600);
-}// Asegúrate de que esto esté al final del archivo o fuera de cualquier llaves { }
+
+}
+
 window.guardarEnEstante = async function(recursoId, btn) {
-    console.log("¡Botón detectado!");
-    alert("Presionaste el recurso: " + recursoId);
-    
     const userId = await obtenerUserId();
-    
+    if (!userId) return notificar("Debes iniciar sesión para poder usar un estante...");
+
     if (favoritosSet.has(recursoId)) {
         const { error } = await supabaseClient
             .from('favoritos')
@@ -589,8 +587,11 @@ window.guardarEnEstante = async function(recursoId, btn) {
             favoritosSet.delete(recursoId);
             btn.classList.remove('saved');
             btn.querySelector('i').className = 'far fa-bookmark';
+            notificar("🔔 Eliminado del estante..."); // Notificación específica
+        } else {
+            notificar("❗ Presionaste muchas veces...");
         }
-    } else {
+    } else { 
         const { error } = await supabaseClient
             .from('favoritos')
             .insert([{ user_id: userId, recurso_id: recursoId }]);
@@ -599,9 +600,12 @@ window.guardarEnEstante = async function(recursoId, btn) {
             favoritosSet.add(recursoId);
             btn.classList.add('saved');
             btn.querySelector('i').className = 'fas fa-bookmark';
+            notificar("🔔  ¡Guardado en el estante!"); // Notificación específica
+        } else {
+            notificar("❗  Presionaste muchas veces...");
         }
     }
-};
+}; 
 
 function toggleVistaBusqueda(activa) {
     const dinamico = document.getElementById('secciones-dinamicas');

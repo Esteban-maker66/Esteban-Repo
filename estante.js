@@ -40,7 +40,7 @@ async function cargarMiEstante() {
 
         grid.innerHTML = ''; 
         grid.style.display = 'grid';
-        
+
         recursos.forEach(recurso => {
         const card = document.createElement('div');
         card.className = 'recurso-card';
@@ -53,7 +53,7 @@ async function cargarMiEstante() {
             </div>
             <strong>${recurso.titulo}</strong>
             <div class="card-footer" style="margin-top: 10px;">
-                <a href="${recurso.link_recurso}" target="_blank" class="btn-download">
+                <a href="${recurso.url}" target="_blank" class="btn-download">
                     <i class="fas fa-book-open"></i> Leer
                 </a>
             </div>
@@ -65,6 +65,12 @@ async function cargarMiEstante() {
 }
 
 async function quitarDeEstante(recursoId) {
+    const confirmar = await mostrarConfirmacion(
+        "¿Quitar del estante?", 
+        "Podrás volver a agregarlo desde el inicio si lo deseas."
+    );
+    if(!confirmar) return;
+
     const userId = await obtenerUserId();
     const { error } = await supabaseClient
         .from('favoritos')
@@ -81,3 +87,26 @@ document.addEventListener('DOMContentLoaded', () => {
     const savedTheme = localStorage.getItem('theme');
     if (savedTheme === 'dark') document.body.classList.add('dark-mode');
 });
+
+function mostrarConfirmacion(titulo, mensaje) {
+    return new Promise((resolve) => {
+        const modal = document.getElementById('custom-confirm');
+        const btnAceptar = document.getElementById('confirm-accept');
+        const btnCancelar = document.getElementById('confirm-cancel');
+        
+        document.getElementById('confirm-title').innerText = titulo;
+        document.getElementById('confirm-msg').innerText = mensaje;
+        
+        modal.classList.add('active');
+
+        const cerrar = (resultado) => {
+            modal.classList.remove('active');
+            resolve(resultado);
+        };
+
+        btnAceptar.onclick = () => cerrar(true);
+        btnCancelar.onclick = () => cerrar(false);
+        // Cerrar si hace clic fuera
+        modal.onclick = (e) => { if(e.target === modal) cerrar(false); };
+    });
+}
