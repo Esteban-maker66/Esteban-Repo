@@ -602,7 +602,7 @@ window.guardarEnEstante = async function(recursoId, btn) {
             btn.querySelector('i').className = 'fas fa-bookmark';
             notificar("🔔  ¡Guardado en el estante!"); // Notificación específica
         } else {
-            notificar("❗  Presionaste muchas veces...");
+            notificar("❗ Inicia Sesion para esta funcion!");
         }
     }
 }; 
