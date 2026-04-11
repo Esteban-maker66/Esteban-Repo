@@ -23,11 +23,8 @@
   ],
   "rewrites": [
     {
-      "source": "/(.*)",
-      "destination": "/404.html",
-      "condition": {
-        "type": "not_found"
-      }
+      "source": "/((?!api|assets|.*\\..*).*)",
+      "destination": "/404.html"
     }
   ]
 }
