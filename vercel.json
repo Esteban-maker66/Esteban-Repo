@@ -1,7 +1,6 @@
 {
-  "errorPages": {
-    "404": "/404.html"
-  },
+  "cleanUrls": true,
+  "trailingSlash": false,
   "headers": [
     {
       "source": "/assets/fonts/(.*)",
@@ -22,6 +21,13 @@
       ]
     }
   ],
-  "trailingSlash": false,
-  "cleanUrls": true
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/404.html",
+      "condition": {
+        "type": "not_found"
+      }
+    }
+  ]
 }
