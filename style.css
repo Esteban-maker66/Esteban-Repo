@@ -941,6 +941,15 @@ input:checked + .slider:before {
     
 }
 
+.recurso-card .recurso-titulo {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text);
+    margin: 0;
+    padding: 0;
+    line-height: 1.4;
+}
+
 
 /* Hamburger Menu Styles */
 .hamburger-btn {
@@ -1846,7 +1855,3 @@ header.search-expanded {
 
 .btn-modal-primary:active { opacity: 0.9; transform: scale(1.02); }
 .btn-modal-secondary:active{ opacity: 0.9; transform: scale(1.02); }
-
-.recurso-titulo {
-    font-size: 0.9rem;
-}

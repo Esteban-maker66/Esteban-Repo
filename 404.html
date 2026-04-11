@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 - Página no encontrada | Arrecife Digital</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <meta name="description" content="Página no encontrada - Arrecife Digital">
+    <meta name="author" content="Esteban David">
+    <link rel="icon" type="image/png" href="assets/logopng.webp">
+    <style>
+        .error-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: calc(100vh - 200px);
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        .error-code {
+            font-size: 120px;
+            font-weight: 700;
+            color: var(--primary);
+            margin: 20px 0;
+            line-height: 1;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .error-icon {
+            font-size: 80px;
+            color: var(--primary);
+            box-sizing: border-box;
+            margin-bottom: 20px;
+            animation: float 2s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-15px);
+            }
+        }
+
+        .error-title {
+            font-size: 32px;
+            color: var(--text);
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .error-message {
+            font-size: 18px;
+            color: var(--text-muted);
+            margin-bottom: 30px;
+            max-width: 500px;
+        }
+
+        .error-actions {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 40px;
+        }
+
+        .error-btn {
+            padding: 12px 30px;
+            font-size: 16px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .error-btn-primary {
+            background-color: var(--primary);
+            color: white;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+        }
+
+        .error-btn-primary:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(37, 99, 235, 0.4);
+        }
+
+        .error-btn-secondary {
+            background-color: var(--surface);
+            color: var(--text);
+            border: 2px solid var(--border);
+        }
+
+        .error-btn-secondary:hover {
+            background-color: var(--border);
+            transform: translateY(-2px);
+        }
+
+        .error-suggestions {
+            background-color: var(--surface);
+            box-shadow: 0 6px 20px var(--shadow);
+            border-radius: 12px;
+            padding: 30px;
+            max-width: 600px;
+            border-left: 4px solid var(--accent);
+        }
+
+        .error-suggestions h3 {
+            color: var(--text);
+            margin-bottom: 20px;
+            font-size: 18px;
+        }
+
+        .error-suggestions ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .error-suggestions li {
+            padding: 10px 0;
+            color: var(--text-muted);
+            border-bottom: 1px solid var(--border);
+            text-align: left;
+        }
+
+        .error-suggestions li:last-child {
+            border-bottom: none;
+        }
+
+        .error-suggestions li i {
+            color: var(--accent);
+            margin-right: 10px;
+            width: 20px;
+        }
+
+        /* Estilos personalizados para el header de 404 */
+        header .header-main {
+            justify-content: center;
+        }
+
+        header .header-center,
+        header .header-right {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .error-code {
+                font-size: 80px;
+            }
+
+            .error-title {
+                font-size: 24px;
+            }
+
+            .error-message {
+                font-size: 16px;
+            }
+
+            .error-icon {
+                font-size: 60px;
+            }
+
+            .error-actions {
+                flex-direction: column;
+            }
+
+            .error-btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-main">
+            <div class="header-left">
+                <img src="assets/logopng.webp" alt="Arrecife Digital Logo" class="logo">
+                <h1>Arrecife Digital</h1>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="error-container">
+            <div class="error-icon">
+                <i class="fas fa-compass"></i>
+            </div>
+            
+            <div class="error-code">404</div>
+            
+            <h2 class="error-title">Página no encontrada...</h2>
+            
+            <p class="error-message">
+                Al parecer, esta página se perdió en el océano digital. No pudimos encontrar lo que buscas.
+            </p>
+
+            <div class="error-actions">
+                <button class="error-btn error-btn-primary" onclick="location.href='index.html'">
+                    <i class="fas fa-arrow-left"></i> Volver al inicio
+                </button>
+                <button class="error-btn error-btn-secondary" onclick="history.back()">
+                    <i class="fas fa-undo"></i> Atrás
+                </button>
+            </div>
+
+            <div class="error-suggestions">
+                <h3><i class="fas fa-lightbulb" style="margin-right: 10px; color: var(--accent);"></i>Lo que puedes hacer:</h3>
+                <ul>
+                    <li>
+                        <i class="fas fa-home"></i>
+                        <a href="index.html" style="color: var(--primary); text-decoration: none;">Ir al inicio</a> para explorar la biblioteca
+                    </li>
+                    <li>
+                        <i class="fas fa-envelope"></i>
+                        <a href="https://centroeducativomarazul.edu.do/" style="color: var(--primary); text-decoration: none;">Reportar un error</a> si crees que es un problema
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </main>
+
+    <footer style="margin-top: 60px; padding: 20px; text-align: center; color: var(--text-muted); border-top: 1px solid var(--border);">
+        <p>&copy; 2026 Arrecife Digital - Centro Educativo Mar Azul</p>
+    </footer>
+</body>
+</html>
