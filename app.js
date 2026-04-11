@@ -189,7 +189,7 @@ function crearTarjetaRecurso(recurso) {
             <span class="categoria-tag">${recurso.categoria}</span>
         </div>
         <div class="recurso-info">
-            <h3 class="recurso-titulo style="font-size: 5rem;">${recurso.titulo}</h3>
+            <h3 class="recurso-titulo>${recurso.titulo}</h3>
             <p class="recurso-autor" style="margin: 0 0 15px 0;">Subido por: <strong>${recurso.usuario_nombre  || 'Invitado'}</strong></p>
             <div class="card-footer">
                 <a href="${recurso.url}" target="_blank" class="btn-download">
