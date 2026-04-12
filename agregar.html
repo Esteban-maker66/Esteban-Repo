@@ -14,10 +14,13 @@
         <h1><i class="fas fa-pen"></i> Colaborar</h1>
         </div>
         <div class="header-right">
+        <div id="loader-container" class="loader-container hidden">
+            <div class="loader-win11"></div>
+        </div>
         <button onclick="window.location.href='index.html'" class="btn-back">
             <i class="fas fa-arrow-left"></i> Inicio
-        </div>
         </button>
+        </div>
     </header>
 
     <main class="admin-main">
@@ -47,6 +50,8 @@
         </div>
                 <h4 class="options">Título del libro:</h4>
                 <input type="text" id="titulo" placeholder="Título" required>
+                <h4 class="options">Autor del libro:</h4>
+                <input type="text" id="autor" placeholder="Autor" required>
                 <h4 class="options">Tu fuente:</h4>
                 <input type="url" id="url" placeholder="(Drive/PDF/enlace)" required>
                 <button type="submit" id="btn-guardar">+ Publicar recurso</button>

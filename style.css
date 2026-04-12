@@ -1239,7 +1239,7 @@ header.search-expanded {
     position: absolute;
     color: var(--text-muted);
     font-size: 1.2rem;
-    padding: 2rem;
+    padding: 0;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -1248,7 +1248,7 @@ header.search-expanded {
     left: 50%;
     transform: translate(-50%, -50%);
     font-weight: bolder;
-    font-size: 1.2rem;
+    font-size: 0.875rem;
 }
 .not-found {
     text-align: center;
@@ -1473,6 +1473,12 @@ header.search-expanded {
     user-select: none;
 }
 
+#filter-categoria {
+    position: relative;
+    width: 100%;
+    user-select: none;
+}
+
 .select-trigger {
     background: var(--background);
     color: rgba(0, 0, 0, 0.648);
@@ -1496,10 +1502,29 @@ header.search-expanded {
     list-style: none;
     padding: 0;
     margin: 0;
+    margin-top: 0.5rem;
     display: none;
-    z-index: 200;
-    overflow: hidden;
+    z-index: 2000;
+    overflow-y: auto;
+    max-height: 175px;
     border: 2px solid var(--border);
+}
+
+.options-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.options-list::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.options-list::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: 3px;
+}
+
+.options-list::-webkit-scrollbar-thumb:hover {
+    background: var(--text-muted);
 }
 
 .options-list.active {
@@ -1797,6 +1822,26 @@ header.search-expanded {
     background: var(--primary); 
 }
 
+@keyframes modalBackdropFade {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes modalContentEnter {
+    from {
+        opacity: 0;
+        transform: translateY(35px) scale(0.5);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
 .modal-overlay {
     position: fixed;
     top: 0; left: 0;
@@ -1810,6 +1855,11 @@ header.search-expanded {
     padding: 20px;
 }
 
+.modal-overlay.active {
+    display: flex;
+    animation: modalBackdropFade 0.3s ease-out;
+}
+
 .modal-content {
     background: color-mix(in srgb, var(--bg-card), transparent 92%);
     border: 1px solid var(--border);
@@ -1819,11 +1869,13 @@ header.search-expanded {
     width: 100%;
     text-align: center;
     box-shadow: 0 5px 40px rgba(0,0,0,0.4);
-    transform: translateY(20px);
     transition: 0.3s;
+    overflow: visible;
 }
 
-.modal-overlay.active { display: flex; }
+.modal-overlay.active .modal-content {
+    animation: modalContentEnter 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
 
 .modal-icon {
     font-size: 3rem;
@@ -1855,3 +1907,68 @@ header.search-expanded {
 
 .btn-modal-primary:active { opacity: 0.9; transform: scale(1.02); }
 .btn-modal-secondary:active{ opacity: 0.9; transform: scale(1.02); }
+
+.loader-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem 0.5rem;
+}
+
+.loader-container.hidden {
+    display: none;
+}
+
+.loader-win11 {
+    width: 24px;
+    height: 24px;
+    border: 3px solid transparent;
+    border-top: 3px solid var(--text);
+    border-right: 3px solid var(--text);
+    border-radius: 50%;
+    animation: spin-win11 0.8s linear infinite;
+}
+
+@keyframes spin-win11 {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.btn-filtro {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: var(--text);
+    padding: 0.44rem 0.54rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.7rem;
+    font-weight: 400;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(12px);
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.161);
+    margin-right: 0.6rem;
+}
+
+.btn-filtro:active {
+    transform: scale(0.95);
+}
+
+.btn-filtro i {
+    font-size: 1rem;
+}
+
+.no-results {
+    text-align: center;
+    padding: 0;
+    color: var(--text-muted);
+    font-size: 1.01rem;
+    font-weight: bold;
+}

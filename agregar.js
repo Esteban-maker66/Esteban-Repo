@@ -96,7 +96,9 @@ document.addEventListener('DOMContentLoaded', () => {
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
         btnGuardar.disabled = true;
-        btnGuardar.innerText = "Enviando...";
+        
+        const loaderContainer = document.getElementById('loader-container');
+        loaderContainer.classList.remove('hidden');
 
         const { data: { session } } = await supabaseClient.auth.getSession();
         const emailActivo = session ? session.user.email : "Invitado";
@@ -104,6 +106,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const nuevoLibro = {
             titulo: document.getElementById('titulo').value,
+            autor_nombre: document.getElementById('autor').value,
             categoria: inputOculto.value, 
             url: document.getElementById('url').value,
             aprobado: false,
@@ -115,18 +118,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const { error } = await supabaseClient.from('recursos').insert([nuevoLibro]);
 
+        loaderContainer.classList.add('hidden');
+
         if (error) {
 
             notificar("Error: " + error.message, "error");
             btnGuardar.disabled = false;
-            btnGuardar.innerText = "+ Publicar recurso";
         } else {
             notificar("¡Enviado con éxito!", "success");
             form.reset();
             inputOculto.value = ""; 
             trigger.querySelector('span').innerText = "Sin categoría";
             validarFormulario(); // Reset visual del botón
-            btnGuardar.innerText = "+ Publicar recurso";
         }
     });
 

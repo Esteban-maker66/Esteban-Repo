@@ -2,6 +2,25 @@ const supabaseUrl = 'https://kzysbbkdqdsxhnmimwct.supabase.co';
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt6eXNiYmtkcWRzeGhubWltd2N0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMwNzM3NzcsImV4cCI6MjA4ODY0OTc3N30.SN7-jaaaF1zsoj5LRzsV-3-MdWf-lZ00UxvXnUhAWyM';
 const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
 
+// Función de notificación
+function notificar(mensaje, tipo = 'info') {
+    const container = document.getElementById('toast-container');
+    if (!container) return;
+
+    const toast = document.createElement('div');
+    toast.className = `toast ${tipo}`;
+    const icon = tipo === 'success' ? 'fa-check-circle' : tipo === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle';
+
+    toast.innerHTML = `<i class="fas ${icon}"></i><span>${mensaje}</span>`;
+    container.appendChild(toast);
+
+    setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateX(100%)';
+        setTimeout(() => toast.remove(), 300);
+    }, 3500);
+}
+
 // Initialize dark mode on page load
 function initializeDarkMode() {
     const savedTheme = localStorage.getItem('theme');
@@ -134,7 +153,7 @@ const nuevoLibro = {
 // Función para cargar lo que está pendiente
 async function cargarPendientes(recursos) {
     const contenedor = document.getElementById('lista-pendientes');
-    contenedor.innerHTML = '<p>Buscando recursos pendientes...</p>';
+    contenedor.innerHTML = '<div style="display: flex; justify-content: center; align-items: center; min-height: 37px;"><div class="loader-win11"></div></div>';
 
     const { data, error } = await supabaseClient
         .from('recursos')
@@ -147,7 +166,7 @@ async function cargarPendientes(recursos) {
     }
 
     if (data.length === 0) {
-        contenedor.innerHTML = '<p class="non-books">No hay nada pendiente por ahora. ¡Todo limpio!</p>';
+        contenedor.innerHTML = '<p class="non-books">Nada pendiente por ahora. ¡Todo limpio!</p>';
         return;
     }
 
@@ -162,6 +181,7 @@ async function cargarPendientes(recursos) {
             <strong>${recurso.titulo}</strong>
             <small>(${recurso.categoria})</small>
             <div class="meta-info" style="font-size: 0.7rem; color: var(--text-muted); margin-top: 5px;">
+                <span><i class="fas fa-book-open"></i> ${recurso.autor_nombre || 'Autor desconocido'}</span><br>
                 <span><i class="fas fa-user"></i> ${recurso.usuario_nombre || 'Usuario'}</span><br>
                 <span><i class="fas fa-calendar"></i> ${new Date(recurso.created_at).toLocaleDateString()}</span>
             </div>
@@ -191,17 +211,25 @@ async function aprobarRecurso(id) {
     );
 
     if(!confirmar) return;
+    
+    const loaderContainer = document.getElementById('loader-container');
+    loaderContainer.classList.remove('hidden');
+    
     const { error } = await supabaseClient
         .from('recursos')
         .update({ aprobado: true })
         .eq('id', id);
 
+    loaderContainer.classList.add('hidden');
+    
     if (error) {
         notificar("No se pudo aprobar", "error");
     } 
     else {
         notificar("Recurso aprobado y visible", "success");
-        cargarPendientes(); // Recargamos la lista
+        setTimeout(() => {
+            cargarPendientes(); // Recargamos la lista con un pequeño delay
+        }, 500);
     }
 }
 
@@ -213,16 +241,24 @@ async function eliminarRecurso(id) {
     );
     
     if(!confirmar) return;
+    
+    const loaderContainer = document.getElementById('loader-container');
+    loaderContainer.classList.remove('hidden');
+    
     const { error } = await supabaseClient
         .from('recursos')
         .delete()
         .eq('id', id);
 
+    loaderContainer.classList.add('hidden');
+    
     if (error) {
         notificar("Error al eliminar", "error");
     } else {
-        notificar("Recurso eliminado", "info");
-        cargarPendientes();
+        notificar("Recurso rechazado", "success");
+        setTimeout(() => {
+            cargarPendientes();
+        }, 500);
     }
 }
 

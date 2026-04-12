@@ -15,6 +15,12 @@
                 <h1><i class="fas fa-bookmark"></i>Mi Estante</h1>
             </div>
             <div class="header-right">
+                <div id="loader-container" class="loader-container hidden">
+                    <div class="loader-win11"></div>
+                </div>
+                <button id="btn-filtro" class="btn-filtro">
+                    <i class="fas fa-filter"></i> 
+                </button>
                 <button onclick="window.location.href='index.html'" class="btn-back">
                     <i class="fas fa-arrow-left"></i> Inicio
                 </button>
@@ -40,6 +46,48 @@
         </div>
     </div>
 </div>
+
+    <div id="filter-modal" class="modal-overlay">
+        <div class="modal-content">
+            <h3><i class="fas fa-filter"></i> Filtrar mi estante</h3>
+            <form id="filter-form">
+                <div style="margin-bottom: 1.5rem;">
+                    <label for="filter-title" style="display: block; margin-bottom: 0.5rem; font-weight: 500; color: var(--text);">Título del libro:</label>
+                    <input type="text" id="filter-title" placeholder="Buscar por título..." style="width: 100%; padding: 0.75rem; border: 2px solid var(--border); border-radius: 8px; background: var(--background); color: var(--text); font-size: 1rem;">
+                </div>
+                <div style="margin-bottom: 1.5rem;">
+                    <label style="display: block; margin-bottom: 0.5rem; font-weight: 500; color: var(--text);">Categoría:</label>
+                    <div id="filter-categoria">
+                        <div class="select-trigger" id="filter-select-trigger">
+                            <span class="no-selected">Todas las categorías</span>
+                            <i class="fas fa-chevron-down dropdown-arrow"></i>
+                        </div>
+                        <input type="hidden" id="filter-categoria-input" value="">
+                        <ul class="options-list" id="filter-options-list">
+                            <li class="opcion" data-value="">Todas las categorías</li>
+                            <li class="opcion" data-value="Narrativa">Narrativa</li>
+                            <li class="opcion" data-value="Ciencia Ficción">Ciencia Ficción</li>
+                            <li class="opcion" data-value="Misterio y Suspenso">Misterio y Suspenso</li>
+                            <li class="opcion" data-value="Cómics y Novelas">Cómics y Novelas</li>
+                            <li class="opcion" data-value="Académicos">Académicos</li>
+                            <li class="opcion" data-value="Desarrollo Personal">Desarrollo Personal</li>
+                            <li class="opcion" data-value="Documentales">Documentales</li>
+                            <li class="opcion" data-value="Comedia">Comedia</li>
+                            <li class="opcion" data-value="Biblias">Biblias</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="modal-buttons">
+                    <button type="button" id="filter-reset" class="btn-modal-secondary">
+                        <i class="fas fa-times"></i> Limpiar
+                    </button>
+                    <button type="submit" class="btn-modal-primary">
+                        <i class="fas fa-check"></i> Aplicar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
     <script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="estante.js"></script>

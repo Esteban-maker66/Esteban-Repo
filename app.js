@@ -190,7 +190,8 @@ function crearTarjetaRecurso(recurso) {
         </div>
         <div class="recurso-info">
             <h3 class="recurso-titulo">${recurso.titulo}</h3>
-            <p class="recurso-autor" style="margin: 0 0 15px 0;">Subido por: <strong>${recurso.usuario_nombre  || 'Invitado'}</strong></p>
+            <p class="recurso-autor" style="margin: 0 0 15px 0;">Autor: <strong>${recurso.autor_nombre  || 'Anónimo'}</strong></p>
+            <p class="recurso-autor" style="margin: 0 0 15px 0;">Colaborador: <strong>${recurso.usuario_nombre  || 'Invitado'}</strong></p>
             <div class="card-footer">
                 <a href="${recurso.url}" target="_blank" class="btn-download">
                     <i class="fas fa-book-open"></i> Leer
@@ -312,7 +313,7 @@ function filtrarPorCategoria(categoria) {
     gridOriginal.appendChild(titulo);
 
     if (filtrados.length === 0) {
-        gridOriginal.innerHTML += `<p style="grid-column: 1/-1; text-align: center; padding: 2rem;">No hay recursos en esta categoría todavía. 🌊</p>`;
+        gridOriginal.innerHTML += `<p style="grid-column: 1/-1; text-align: center; padding: 0;">El arrecife esta en creciendo...  Encontraras lo que buscas pronto! 🌊</p>`;
     } else {
         filtrados.forEach(recurso => {
             gridOriginal.appendChild(crearTarjetaRecurso(recurso));
@@ -423,7 +424,7 @@ function renderizar(lista) {
         gridOriginal.innerHTML = `
             <div class="busqueda-vacia" style="grid-column: 1/-1; text-align: center; padding: 4rem 1rem;">
                 <i class="fas fa-search-minus" style="font-size: 3rem; color: var(--text-muted); margin-bottom: 1rem;"></i>
-                <p>No encontramos resultados para tu búsqueda... 🌊</p>
+                <p class="no-results">El arrecife esta en creciendo...  Encontraras lo que buscas pronto! 🌊</p>
             </div>`;
         return;
     }
