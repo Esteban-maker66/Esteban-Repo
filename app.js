@@ -577,13 +577,19 @@ window.guardarEnEstante = async function(recursoId, btn) {
     const userId = await obtenerUserId();
     if (!userId) return notificar("Debes iniciar sesión para poder usar un estante...");
 
+    const loaderContainer = document.getElementById('loader-container-mobile');
+    
     if (favoritosSet.has(recursoId)) {
+        loaderContainer.classList.remove('hidden');
+        
         const { error } = await supabaseClient
             .from('favoritos')
             .delete()
             .eq('user_id', userId)
             .eq('recurso_id', recursoId);
 
+        loaderContainer.classList.add('hidden');
+        
         if (!error) {
             favoritosSet.delete(recursoId);
             btn.classList.remove('saved');
@@ -593,10 +599,14 @@ window.guardarEnEstante = async function(recursoId, btn) {
             notificar("❗ Presionaste muchas veces...");
         }
     } else { 
+        loaderContainer.classList.remove('hidden');
+        
         const { error } = await supabaseClient
             .from('favoritos')
             .insert([{ user_id: userId, recurso_id: recursoId }]);
 
+        loaderContainer.classList.add('hidden');
+        
         if (!error) {
             favoritosSet.add(recursoId);
             btn.classList.add('saved');
