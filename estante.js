@@ -18,13 +18,25 @@ async function obtenerUserId() {
 function renderizarRecursos(recursos) {
     const grid = document.getElementById('grid-recursos');
     grid.innerHTML = '';
-    grid.style.display = 'grid';
 
     if (recursos.length === 0) {
-        grid.innerHTML = "<p class='estante-vacio'>No hay recursos que coincidan con los filtros... 📚</p>";
+        grid.style.display = 'flex';
+        grid.style.flexDirection = 'column';
+        grid.style.alignItems = 'center';
+        grid.style.justifyContent = 'center';
+        grid.style.minHeight = 'calc(100vh - 200px)';
+        grid.innerHTML = `
+            <div style="text-align: center;">
+                <p class='books'>📚</p>
+                <p class='estante-vacio'>No hay recursos que coincidan con los filtros...</p>
+            </div>
+        `;
         return;
     }
 
+    grid.style.display = 'grid';
+    grid.style.minHeight = 'auto';
+    
     recursos.forEach(recurso => {
         const card = document.createElement('div');
         card.className = 'recurso-card';
@@ -112,8 +124,9 @@ function aplicarFiltro() {
     }
 
     if (filterCategory) {
+        // Comparación case-insensitive para categorías
         recursosFiltrados = recursosFiltrados.filter(recurso =>
-            recurso.categoria === filterCategory
+            recurso.categoria.toLowerCase().trim() === filterCategory.toLowerCase().trim()
         );
     }
 

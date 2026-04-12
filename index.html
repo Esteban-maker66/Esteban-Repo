@@ -167,6 +167,41 @@
 
     <div id="toast-container"></div>
 
+    <!-- Botón flotante de comentarios -->
+    <button id="btn-comentarios" class="btn-comentarios-flotante">
+        <i class="fas fa-comments"></i>
+    </button>
+
+    <!-- Modal de comentarios -->
+    <div id="modal-comentarios" class="modal-overlay">
+        <div class="modal-content">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                <h3><i class="fas fa-comment-dots"></i> Enviar Comentarios </h3>
+                <button onclick="cerrarModalComentarios()" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text);">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="form-comentarios">
+                <div style="margin-bottom: 1rem;">
+                    <label for="nombre-usuario" style="display: block; margin-bottom: 0.5rem; font-weight: 500; color: var(--text);">Tu nombre (ya registrado):</label>
+                    <input type="text" id="nombre-usuario" placeholder="Ej: Juan Pérez" required style="width: 100%; padding: 0.75rem; border: 2px solid var(--border); border-radius: 25px; background: var(--background); color: var(--text); font-size: 1rem;">
+                </div>
+                <div style="margin-bottom: 1.5rem;">
+                    <label for="mensaje-comentario" style="display: block; margin-bottom: 0.5rem; font-weight: 500; color: var(--text);">Tu recomendación:</label>
+                    <textarea id="mensaje-comentario" placeholder="Cuéntanos tu recomendación o sugerencia..." required style="width: 100%; padding: 0.75rem; border: 2px solid var(--border); border-radius: 16px; background: var(--background); color: var(--text); font-size: 1rem; min-height: 120px; resize: vertical;"></textarea>
+                </div>
+                <div class="modal-buttons">
+                    <button type="button" onclick="cerrarModalComentarios()" class="btn-modal-secondary">
+                        Cancelar
+                    </button>
+                    <button type="submit" class="btn-modal-primary">
+                        <i class="fas fa-paper-plane"></i> Enviar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <footer id="main-footer">
     <div class="footer-content">
         <div class="footer-section about">

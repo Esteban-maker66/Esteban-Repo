@@ -37,6 +37,12 @@ async function obtenerUserId() {
     return localId;
 }
 
+// Verificar si el usuario está realmente autenticado (no anónimo)
+async function verificarAutenticacion() {
+    const { data: { user } } = await supabaseClient.auth.getUser();
+    return !!user; // Devuelve true solo si hay usuario autenticado
+}
+
 function mostrarSkeletons() {
     const contenedor = document.getElementById('secciones-dinamicas');
     // Creamos 3 esqueletos parecidas a carretes
@@ -423,7 +429,7 @@ function renderizar(lista) {
     if (lista.length === 0) {
         gridOriginal.innerHTML = `
             <div class="busqueda-vacia" style="grid-column: 1/-1; text-align: center; padding: 4rem 1rem;">
-                <i class="fas fa-search-minus" style="font-size: 3rem; color: var(--text-muted); margin-bottom: 1rem;"></i>
+                <i class="fas fa-search-minus" id="no-results-icon" style="font-size: 3rem; color: var(--text-muted); margin-bottom: 1rem;"></i>
                 <p class="no-results">El arrecife esta en creciendo...  Encontraras lo que buscas pronto! 🌊</p>
             </div>`;
         return;
@@ -442,6 +448,13 @@ function renderizar(lista) {
 }
 
 async function guardarEnEstante(recursoId, btn) {
+    // Verificar autenticación real del usuario
+    const estaAutenticado = await verificarAutenticacion();
+    if (!estaAutenticado) {
+        notificar("Debes iniciar sesión para poder usar un estante...", "error");
+        return;
+    }
+
     console.log("Iniciando guardado para recurso:", recursoId);
     const userId = await obtenerUserId();
     console.log("Usuario actual:", userId);
@@ -574,9 +587,14 @@ function notificar(mensaje, tipo = 'info') {
 }
 
 window.guardarEnEstante = async function(recursoId, btn) {
-    const userId = await obtenerUserId();
-    if (!userId) return notificar("Debes iniciar sesión para poder usar un estante...");
+    // Verificar autenticación real del usuario
+    const estaAutenticado = await verificarAutenticacion();
+    if (!estaAutenticado) {
+        notificar("🔔 inicia sesión para esta funcion!", "error"); 
+        return;
+    }
 
+    const userId = await obtenerUserId();
     const loaderContainer = document.getElementById('loader-container-mobile');
     
     if (favoritosSet.has(recursoId)) {
@@ -594,7 +612,7 @@ window.guardarEnEstante = async function(recursoId, btn) {
             favoritosSet.delete(recursoId);
             btn.classList.remove('saved');
             btn.querySelector('i').className = 'far fa-bookmark';
-            notificar("🔔 Eliminado del estante..."); // Notificación específica
+            notificar("🔔 Eliminado del estante...");
         } else {
             notificar("❗ Presionaste muchas veces...");
         }
@@ -611,9 +629,7 @@ window.guardarEnEstante = async function(recursoId, btn) {
             favoritosSet.add(recursoId);
             btn.classList.add('saved');
             btn.querySelector('i').className = 'fas fa-bookmark';
-            notificar("🔔  ¡Guardado en el estante!"); // Notificación específica
-        } else {
-            notificar("❗ Inicia Sesion para esta funcion!");
+            notificar("🔔  ¡Guardado en el estante!");
         }
     }
 }; 
@@ -635,3 +651,118 @@ function toggleVistaBusqueda(activa) {
         if (footer) footer.style.setProperty('display', 'block', 'important');
     }
 }
+
+// Funciones para comentarios
+async function abrirModalComentarios() {
+    const modal = document.getElementById('modal-comentarios');
+    const inputNombre = document.getElementById('nombre-usuario');
+    
+    if (modal) {
+        // Obtener usuario autenticado
+        const { data: { user } } = await supabaseClient.auth.getUser();
+        
+        if (user) {
+            // Si hay usuario autenticado, llenar automáticamente
+            inputNombre.value = user.user_metadata?.full_name || user.email || 'Usuario';
+            inputNombre.readOnly = true;
+            inputNombre.style.backgroundColor = 'var(--surface)';
+            inputNombre.style.cursor = 'default';
+        } else {
+            // Si no hay usuario, limpiar el campo y permitir entrada manual
+            inputNombre.value = '';
+            inputNombre.readOnly = false;
+            inputNombre.style.backgroundColor = 'var(--background)';
+            inputNombre.style.cursor = 'text';
+        }
+        
+        modal.classList.add('active');
+    }
+}
+
+function cerrarModalComentarios() {
+    const modal = document.getElementById('modal-comentarios');
+    if (modal) {
+        modal.classList.remove('active');
+    }
+}
+
+// Inicializar listeners de comentarios
+document.addEventListener('DOMContentLoaded', function() {
+    const btnComentarios = document.getElementById('btn-comentarios');
+    const modalComentarios = document.getElementById('modal-comentarios');
+    const formComentarios = document.getElementById('form-comentarios');
+
+    // Abrir modal al hacer click en el botón
+    if (btnComentarios) {
+        btnComentarios.addEventListener('click', abrirModalComentarios);
+    }
+
+    // Cerrar modal al hacer click fuera
+    if (modalComentarios) {
+        modalComentarios.addEventListener('click', function(e) {
+            if (e.target === modalComentarios) {
+                cerrarModalComentarios();
+            }
+        });
+    }
+
+    // Enviar comentario
+    if (formComentarios) {
+        formComentarios.addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            let nombre = document.getElementById('nombre-usuario').value.trim();
+            const mensaje = document.getElementById('mensaje-comentario').value.trim();
+
+            // Si el nombre está vacío, verificar si hay usuario autenticado
+            if (!nombre) {
+                const { data: { user } } = await supabaseClient.auth.getUser();
+                if (user) {
+                    nombre = user.user_metadata?.full_name || user.email || 'Usuario';
+                } else {
+                    notificar('Por favor ingresa tu nombre o inicia sesión', 'error');
+                    return;
+                }
+            }
+
+            if (!mensaje) {
+                notificar('Por favor escribe tu recomendación', 'error');
+                return;
+            }
+
+            const btnSubmit = formComentarios.querySelector('button[type="submit"]');
+            const textoOriginal = btnSubmit.innerHTML;
+            btnSubmit.disabled = true;
+            btnSubmit.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...';
+
+            try {
+                console.log('Enviando comentario:', { nombre, mensaje });
+                
+                const { data, error } = await supabaseClient
+                    .from('comentarios')
+                    .insert([{
+                        nombre: nombre,
+                        mensaje: mensaje
+                    }]);
+
+                console.log('Respuesta de inserción:', { data, error });
+
+                if (error) {
+                    console.error('Error detallado:', error);
+                    notificar('Error al enviar: ' + error.message, 'error');
+                } else {
+                    console.log('Comentario guardado exitosamente');
+                    notificar('¡enviado! Gracias por tu aporte 🎉', 'success');
+                    formComentarios.reset();
+                    cerrarModalComentarios();
+                }
+            } catch (err) {
+                console.error('Exception al enviar comentario:', err);
+                notificar('Error al enviar: ' + err.message, 'error');
+            } finally {
+                btnSubmit.disabled = false;
+                btnSubmit.innerHTML = textoOriginal;
+            }
+        });
+    }
+});

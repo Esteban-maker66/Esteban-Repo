@@ -143,13 +143,6 @@ function closeAdminMobileMenu() {
     }
 }
 
-const nuevoLibro = {
-    titulo: document.getElementById('titulo').value,
-    categoria: document.getElementById('categoria').value,
-    url: document.getElementById('url').value,
-    aprobado: true // soy el admin, asi que tengo el poder de aprobar al instante
-};
-
 // Función para cargar lo que está pendiente
 async function cargarPendientes(recursos) {
     const contenedor = document.getElementById('lista-pendientes');
@@ -295,3 +288,67 @@ function mostrarConfirmacion(titulo, mensaje) {
         modal.onclick = (e) => { if(e.target === modal) cerrar(false); };
     });
 }
+
+// Función para cargar comentarios
+async function cargarComentarios() {
+    const contenedor = document.getElementById('lista-comentarios');
+    if (!contenedor) return;
+
+    contenedor.innerHTML = '<div style="display: flex; justify-content: center; align-items: center; min-height: 37px;"><div class="loader-win11"></div></div>';
+
+    try {
+        console.log('Cargando comentarios...');
+        
+        const { data: comentarios, error } = await supabaseClient
+            .from('comentarios')
+            .select('*')
+            .order('created_at', { ascending: false });
+
+        console.log('Respuesta de comentarios:', { comentarios, error });
+
+        if (error) {
+            console.error('Error al cargar comentarios:', error);
+            notificar("Error al cargar comentarios: " + error.message, "error");
+            contenedor.innerHTML = '<p class="comentarios-vacio">Error: ' + error.message + '</p>';
+            return;
+        }
+
+        if (!comentarios || comentarios.length === 0) {
+            console.log('No hay comentarios');
+            contenedor.innerHTML = '<p class="comentarios-vacio">No hay recomendaciones aún. Los usuarios pueden enviar sus sugerencias desde el botón de comentarios en la página principal.</p>';
+            return;
+        }
+
+        console.log('Mostrando ' + comentarios.length + ' comentarios');
+        contenedor.innerHTML = '';
+        comentarios.forEach(comentario => {
+            try {
+                const fecha = new Date(comentario.created_at).toLocaleDateString('es-ES', {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric',
+                });
+
+                const card = document.createElement('div');
+                card.className = 'comentario-card';
+                card.innerHTML = `
+                    <div class="comentario-header">
+                        <span class="comentario-autor"><i class="fas fa-user-circle"></i> ${comentario.nombre}</span>
+                        <span class="comentario-fecha"><i class="fas fa-calendar-alt"></i> ${fecha}</span>
+                    </div>
+                    <p class="comentario-mensaje">${comentario.mensaje}</p>
+                `;
+                contenedor.appendChild(card);
+            } catch (cardErr) {
+                console.error('Error renderizando comentario:', comentario, cardErr);
+            }
+        });
+    } catch (err) {
+        console.error('Exception al cargar comentarios:', err);
+        notificar("Error: " + err.message, "error");
+        contenedor.innerHTML = '<p class="comentarios-vacio">Error cargando comentarios</p>';
+    }
+}
+
+// Cargar comentarios al abrir la página
+document.addEventListener('DOMContentLoaded', cargarComentarios);
