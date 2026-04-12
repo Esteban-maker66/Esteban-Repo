@@ -1124,6 +1124,7 @@ input:checked + .slider:before {
         align-items: center;
     }
 
+
     .header-left {
         gap: 0.5rem;
     }
@@ -1417,15 +1418,15 @@ header.search-expanded {
 }
 
 .form-help {
-    font-size: 0.8rem;
+    font-size: 0.875rem;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 0 auto;
+    margin: auto;
     gap: 8px;
-    margin-top: 15px;
+    margin-top: 5px;
     line-height: 1.4;
-    max-width: 525px;
+    max-width: 320px;
 }
 
 .profile-avatar { 
@@ -1632,6 +1633,13 @@ header.search-expanded {
     margin: 1.5rem 0 0.5rem 0;
     display: flex;
     flex-direction: column;
+}
+
+.seccion-biblioteca:first-of-type {
+    background: linear-gradient(135deg, rgba(37, 99, 235, 0.08) 0%, rgba(255, 165, 10, 0.08) 100%);
+    border-left: 4px solid var(--primary);
+    padding: 1rem 0;
+    margin-bottom: 1.5rem;
 }
 
 .seccion-header h2 {

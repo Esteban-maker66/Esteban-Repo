@@ -127,6 +127,30 @@ async function obtenerRecursos(categoria = 'todas') {
         await obtenerFavoritos();
     }
 
+    // Obtener conteo de veces guardado para cada recurso (solo si es 'todas')
+    if (categoria === 'todas' && recursos && recursos.length > 0) {
+        try {
+            const { data: favoritosCount } = await supabaseClient
+                .from('favoritos')
+                .select('recurso_id');
+            
+            if (favoritosCount) {
+                // Contar cuántas veces aparece cada recurso_id
+                const conteo = {};
+                favoritosCount.forEach(fav => {
+                    conteo[fav.recurso_id] = (conteo[fav.recurso_id] || 0) + 1;
+                });
+                
+                // Agregar el conteo a cada recurso
+                recursos.forEach(recurso => {
+                    recurso.veces_guardado = conteo[recurso.id] || 0;
+                });
+            }
+        } catch (err) {
+            console.error('Error al obtener conteo de favoritos:', err);
+        }
+    }
+
     // Si es 'todas', usamos secciones. Si es una categoría específica, usamos el grid.
     if (categoria === 'todas') {
         renderizarSecciones(recursos);
@@ -142,6 +166,7 @@ function renderizarSecciones(recursos) {
     contenedor.innerHTML = ''; 
 
     const config = [
+        { titulo: '⭐ Libros Destacados', filtro: 'Destacados' },
         { titulo: '📖 libros Recientes', filtro: 'Recientes' },
         { titulo: '🏷️ La Narrativa..', filtro: 'Narrativa' },
         { titulo: '⚡ Ciencias Ficciónes..', filtro: 'Ciencia Ficción' },
@@ -151,7 +176,13 @@ function renderizarSecciones(recursos) {
 
     config.forEach(sec => {
         let filtrados;
-        if (sec.filtro === 'Recientes') {
+        if (sec.filtro === 'Destacados') {
+            // Los más guardados
+            filtrados = recursos
+                .filter(r => r.veces_guardado && r.veces_guardado > 0)
+                .sort((a, b) => (b.veces_guardado || 0) - (a.veces_guardado || 0))
+                .slice(0, 50);
+        } else if (sec.filtro === 'Recientes') {
             filtrados = recursos.slice(0, 50);
         } else {
             // Usamos toLowerCase() para que coincida aunque haya diferencias de mayúsculas
