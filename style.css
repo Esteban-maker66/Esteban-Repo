@@ -766,7 +766,10 @@ input:checked + .slider:before {
     }
 
 
-    @media (max-width: 1210px) {
+    @media screen and (min-width: 768px) and (max-width: 1024px) {
+        html{
+            font-size: 1.2rem;
+        }
         .grid-layout {
             grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
             padding: 0.5rem;
@@ -774,7 +777,7 @@ input:checked + .slider:before {
         }
         #busqueda {
             width: 100%;
-            max-width: 80%;
+            max-width: 92%;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -782,14 +785,14 @@ input:checked + .slider:before {
         }
         #searchIcon {
             width: 100%;
-            max-width: 21%;
+            max-width: 10%;
             display: flex;
             align-items: center;
             justify-content: center;
             margin: auto;
         }
         .header-main {
-            grid-template-columns: 1fr;
+            grid-template-columns:1fr;
             gap: 1rem;
             transition: all 0.3s ease;
         }
@@ -798,8 +801,11 @@ input:checked + .slider:before {
             gap: 0.5rem;
         }
         .header-center {
-            order: 1;
+            order: 0;
             gap: 0.5rem;
+        }
+        .header {
+            font-size: 1.5rem;
         }
     }
 /* Responsive Design */
