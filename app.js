@@ -507,6 +507,8 @@ async function guardarEnEstante(recursoId, btn) {
             btn.classList.remove('saved');
             btn.querySelector('i').className = 'far fa-bookmark';
             notificar("Quitado del estante", "info");
+            // Actualizar destacados globales después de eliminar
+            await actualizarDestacados();
         }
     } else {
         console.log("Intentando insertar en Supabase...");
@@ -524,6 +526,8 @@ async function guardarEnEstante(recursoId, btn) {
             btn.classList.add('saved');
             btn.querySelector('i').className = 'fas fa-bookmark';
             notificar("¡Guardado en tu estante!", "success");
+            // Actualizar destacados globales después de guardar
+            await actualizarDestacados();
         }
     }
 }
@@ -617,6 +621,39 @@ function notificar(mensaje, tipo = 'info') {
 
 }
 
+// Actualizar el conteo de destacados de forma global (todos los usuarios)
+async function actualizarDestacados() {
+    try {
+        // Obtener el conteo global de veces que cada recurso fue guardado
+        const { data: favoritosCount } = await supabaseClient
+            .from('favoritos')
+            .select('recurso_id');
+        
+        if (favoritosCount && todosLosRecursos.length > 0) {
+            // Contar cuántas veces aparece cada recurso_id
+            const conteo = {};
+            favoritosCount.forEach(fav => {
+                conteo[fav.recurso_id] = (conteo[fav.recurso_id] || 0) + 1;
+            });
+            
+            // Actualizar el conteo en todosLosRecursos
+            todosLosRecursos.forEach(recurso => {
+                recurso.veces_guardado = conteo[recurso.id] || 0;
+            });
+            
+            // Si estamos en la página principal (modo inicio, no búsqueda), re-renderizar las secciones
+            const dinamico = document.getElementById('secciones-dinamicas');
+            const gridOriginal = document.getElementById('grid-recursos');
+            
+            if (dinamico && dinamico.style.display !== 'none') {
+                renderizarSecciones(todosLosRecursos);
+            }
+        }
+    } catch (err) {
+        console.error('Error al actualizar destacados:', err);
+    }
+}
+
 window.guardarEnEstante = async function(recursoId, btn) {
     // Verificar autenticación real del usuario
     const estaAutenticado = await verificarAutenticacion();
@@ -644,6 +681,8 @@ window.guardarEnEstante = async function(recursoId, btn) {
             btn.classList.remove('saved');
             btn.querySelector('i').className = 'far fa-bookmark';
             notificar("🔔 Eliminado del estante...");
+            // Actualizar destacados globales después de eliminar
+            await actualizarDestacados();
         } else {
             notificar("❗ Presionaste muchas veces...");
         }
@@ -661,6 +700,8 @@ window.guardarEnEstante = async function(recursoId, btn) {
             btn.classList.add('saved');
             btn.querySelector('i').className = 'fas fa-bookmark';
             notificar("🔔  ¡Guardado en el estante!");
+            // Actualizar destacados globales después de guardar
+            await actualizarDestacados();
         }
     }
 }; 
