@@ -188,7 +188,12 @@ function renderizarSecciones(recursos) {
         { titulo: '🏷️ La Narrativa..', filtro: 'Narrativa' },
         { titulo: '⚡ Ciencias Ficciónes..', filtro: 'Ciencia Ficción' },
         { titulo: '🔍 Misterio y Suspenso..', filtro: 'Misterio y Suspenso' },
-        { titulo: '🔖 Los Cómics y Novelas..', filtro: 'Cómics Y Novelas' }
+        { titulo: '🔖 Los Cómics y Novelas..', filtro: 'Cómics Y Novelas' },
+        { titulo: '😂 Comedia..', filtro: 'Comedia' },
+        { titulo: '🎓 Académicos..', filtro: 'Académicos' },
+        { titulo: '🌱 Desarrollo Personal..', filtro: 'Desarrollo Personal' },
+        { titulo: '📚 Documentales..', filtro: 'Documentales' },
+        { titulo: '📖 Biblias..', filtro: 'Biblias' },
     ];
 
     config.forEach(sec => {
@@ -525,7 +530,6 @@ async function guardarEnEstante(recursoId, btn) {
             btn.querySelector('i').className = 'far fa-bookmark';
             notificar("Quitado del estante", "info");
             // Actualizar destacados globales después de eliminar
-            await actualizarDestacados();
         }
     } else {
         console.log("Intentando insertar en Supabase...");
@@ -544,7 +548,6 @@ async function guardarEnEstante(recursoId, btn) {
             btn.querySelector('i').className = 'fas fa-bookmark';
             notificar("¡Guardado en tu estante!", "success");
             // Actualizar destacados globales después de guardar
-            await actualizarDestacados();
         }
     }
 }
@@ -638,42 +641,7 @@ function notificar(mensaje, tipo = 'info') {
 
 }
 
-// Actualizar el conteo de destacados de forma global (todos los usuarios)
-async function actualizarDestacados() {
-    try {
-        // Obtener el conteo global usando la función RPC (sin restricciones RLS)
-        const { data: conteoData, error: conteoError } = await supabaseClient
-            .rpc('obtener_conteo_favoritos');
-        
-        if (conteoError) {
-            console.warn('Error RPC al actualizar destacados:', conteoError.message);
-            return;
-        }
-        
-        if (conteoData && todosLosRecursos.length > 0) {
-            // Mapear datos de la RPC al objeto de conteo
-            const conteo = {};
-            conteoData.forEach(item => {
-                conteo[item.recurso_id] = item.count;
-            });
-            
-            // Actualizar el conteo en todosLosRecursos
-            todosLosRecursos.forEach(recurso => {
-                recurso.veces_guardado = conteo[recurso.id] || 0;
-            });
-            
-            // Si estamos en la página principal (modo inicio, no búsqueda), re-renderizar las secciones
-            const dinamico = document.getElementById('secciones-dinamicas');
-            const gridOriginal = document.getElementById('grid-recursos');
-            
-            if (dinamico && dinamico.style.display !== 'none') {
-                renderizarSecciones(todosLosRecursos);
-            }
-        }
-    } catch (err) {
-        console.error('Error al actualizar destacados:', err);
-    }
-}
+
 
 window.guardarEnEstante = async function(recursoId, btn) {
     // Verificar autenticación real del usuario
@@ -703,7 +671,6 @@ window.guardarEnEstante = async function(recursoId, btn) {
             btn.querySelector('i').className = 'far fa-bookmark';
             notificar("🔔 Eliminado del estante...");
             // Actualizar destacados globales después de eliminar
-            await actualizarDestacados();
         } else {
             notificar("❗ Presionaste muchas veces...");
         }
@@ -722,7 +689,6 @@ window.guardarEnEstante = async function(recursoId, btn) {
             btn.querySelector('i').className = 'fas fa-bookmark';
             notificar("🔔  ¡Guardado en el estante!");
             // Actualizar destacados globales después de guardar
-            await actualizarDestacados();
         }
     }
 }; 
