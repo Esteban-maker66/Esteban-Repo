@@ -203,9 +203,9 @@ function renderizarSecciones(recursos) {
             filtrados = recursos
                 .filter(r => r.veces_guardado && r.veces_guardado > 0)
                 .sort((a, b) => (b.veces_guardado || 0) - (a.veces_guardado || 0))
-                .slice(0, 50);
+                .slice(0, 7);
         } else if (sec.filtro === 'Recientes') {
-            filtrados = recursos.slice(0, 50);
+            filtrados = recursos.slice(0, 20);
         } else {
             // Usamos toLowerCase() para que coincida aunque haya diferencias de mayúsculas
             filtrados = recursos.filter(recurso => 
@@ -215,7 +215,7 @@ function renderizarSecciones(recursos) {
 
         if (filtrados.length > 0) {
             const seccion = document.createElement('section');
-            seccion.className = 'seccion-biblioteca'; // Coincide con tu CSS
+            seccion.className = 'seccion-biblioteca';
             seccion.innerHTML = `
                 <div class="seccion-header">
                     <h2>${sec.titulo}</h2>
@@ -224,7 +224,7 @@ function renderizarSecciones(recursos) {
             
             const carrete = seccion.querySelector('.carrete-scroll');
             filtrados.forEach(recurso => {
-                // AQUÍ: Asegúrate de que esta función exista y devuelva un elemento HTML
+    
                 carrete.appendChild(crearTarjetaRecurso(recurso)); 
             });
             contenedor.appendChild(seccion);
