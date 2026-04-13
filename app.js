@@ -245,7 +245,7 @@ function crearTarjetaRecurso(recurso) {
         <div class="recurso-info">
             <h3 class="recurso-titulo">${recurso.titulo}</h3>
             <p class="recurso-autor" style="margin: 0 0 15px 0;">Autor: <strong>${recurso.autor_nombre  || 'Anónimo'}</strong></p>
-            <p class="recurso-autor" style="margin: 0 0 15px 0;">Colaborador: <strong>${recurso.usuario_nombre  || 'Invitado'}</strong></p>
+            <p class="recurso-autor" style="margin: 0 0 15px 0;">Colaborador/a: <strong>${recurso.usuario_nombre  || 'Invitado'}</strong></p>
             <div class="card-footer">
                 <a href="${recurso.url}" target="_blank" class="btn-download">
                     <i class="fas fa-book-open"></i> Leer
