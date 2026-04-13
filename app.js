@@ -130,15 +130,15 @@ async function obtenerRecursos(categoria = 'todas') {
     // Obtener conteo de veces guardado para cada recurso (solo si es 'todas')
     if (categoria === 'todas' && recursos && recursos.length > 0) {
         try {
-            const { data: favoritosCount } = await supabaseClient
-                .from('favoritos')
-                .select('recurso_id');
+            const { data: conteoData } = await supabaseClient
+                .from('favoritos_conteo')
+                .select('recurso_id, veces_guardado');
             
-            if (favoritosCount) {
-                // Contar cuántas veces aparece cada recurso_id
+            if (conteoData) {
+                // Crear objeto de conteo a partir del resultado
                 const conteo = {};
-                favoritosCount.forEach(fav => {
-                    conteo[fav.recurso_id] = (conteo[fav.recurso_id] || 0) + 1;
+                conteoData.forEach(item => {
+                    conteo[item.recurso_id] = item.veces_guardado;
                 });
                 
                 // Agregar el conteo a cada recurso
@@ -543,7 +543,6 @@ document.addEventListener("DOMContentLoaded", function() {
     const mobileCategoriesContent = document.getElementById("mobile-categories-content");
     const mobileDropdown = mobileCategoriesBtn ? mobileCategoriesBtn.closest(".mobile-dropdown") : null;
 
-    // Toggle hamburger menu
     if (hamburgerBtn) {
         hamburgerBtn.addEventListener("click", function() {
             mobileMenuOverlay.classList.toggle("active");
@@ -551,12 +550,10 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 
-    // Close mobile menu
     if (mobileMenuClose) {
         mobileMenuClose.addEventListener("click", closeMobileMenu);
     }
 
-    // Close on overlay click
     if (mobileMenuOverlay) {
         mobileMenuOverlay.addEventListener("click", function(e) {
             if (e.target === mobileMenuOverlay) {
@@ -565,7 +562,6 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 
-    // Mobile categories dropdown
     if (mobileCategoriesBtn) {
         mobileCategoriesBtn.addEventListener("click", function(e) {
             e.preventDefault();
@@ -575,7 +571,6 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 
-    // Close on escape key
     document.addEventListener("keydown", function(e) {
         if (e.key === "Escape" && mobileMenuOverlay.classList.contains("active")) {
             closeMobileMenu();
@@ -625,15 +620,15 @@ function notificar(mensaje, tipo = 'info') {
 async function actualizarDestacados() {
     try {
         // Obtener el conteo global de veces que cada recurso fue guardado
-        const { data: favoritosCount } = await supabaseClient
-            .from('favoritos')
-            .select('recurso_id');
+        const { data: conteoData } = await supabaseClient
+            .from('favoritos_conteo')
+            .select('recurso_id, veces_guardado');
         
-        if (favoritosCount && todosLosRecursos.length > 0) {
-            // Contar cuántas veces aparece cada recurso_id
+        if (conteoData && todosLosRecursos.length > 0) {
+            // Crear objeto de conteo a partir del resultado
             const conteo = {};
-            favoritosCount.forEach(fav => {
-                conteo[fav.recurso_id] = (conteo[fav.recurso_id] || 0) + 1;
+            conteoData.forEach(item => {
+                conteo[item.recurso_id] = item.veces_guardado;
             });
             
             // Actualizar el conteo en todosLosRecursos
