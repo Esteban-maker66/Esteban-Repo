@@ -130,15 +130,32 @@ async function obtenerRecursos(categoria = 'todas') {
     // Obtener conteo de veces guardado para cada recurso (solo si es 'todas')
     if (categoria === 'todas' && recursos && recursos.length > 0) {
         try {
-            const { data: favoritosCount } = await supabaseClient
-                .from('favoritos')
-                .select('recurso_id');
+            // Llamar a función RPC para obtener conteo global sin restricciones RLS
+            const { data: conteoData, error: conteoError } = await supabaseClient
+                .rpc('obtener_conteo_favoritos');
             
-            if (favoritosCount) {
-                // Contar cuántas veces aparece cada recurso_id
+            if (conteoError) {
+                console.warn('Error RPC (fallback a contador local):', conteoError.message);
+                // Fallback: si falla RPC, al menos intentar obtener de favoritos del usuario
+                const { data: userFavs } = await supabaseClient
+                    .from('favoritos')
+                    .select('recurso_id')
+                    .eq('user_id', await obtenerUserId());
+                
+                if (userFavs) {
+                    const conteo = {};
+                    userFavs.forEach(fav => {
+                        conteo[fav.recurso_id] = (conteo[fav.recurso_id] || 0) + 1;
+                    });
+                    recursos.forEach(recurso => {
+                        recurso.veces_guardado = conteo[recurso.id] || 0;
+                    });
+                }
+            } else if (conteoData) {
+                // Mapear datos de la RPC al objeto de conteo
                 const conteo = {};
-                favoritosCount.forEach(fav => {
-                    conteo[fav.recurso_id] = (conteo[fav.recurso_id] || 0) + 1;
+                conteoData.forEach(item => {
+                    conteo[item.recurso_id] = item.count;
                 });
                 
                 // Agregar el conteo a cada recurso
@@ -624,16 +641,20 @@ function notificar(mensaje, tipo = 'info') {
 // Actualizar el conteo de destacados de forma global (todos los usuarios)
 async function actualizarDestacados() {
     try {
-        // Obtener el conteo global de veces que cada recurso fue guardado
-        const { data: favoritosCount } = await supabaseClient
-            .from('favoritos')
-            .select('recurso_id');
+        // Obtener el conteo global usando la función RPC (sin restricciones RLS)
+        const { data: conteoData, error: conteoError } = await supabaseClient
+            .rpc('obtener_conteo_favoritos');
         
-        if (favoritosCount && todosLosRecursos.length > 0) {
-            // Contar cuántas veces aparece cada recurso_id
+        if (conteoError) {
+            console.warn('Error RPC al actualizar destacados:', conteoError.message);
+            return;
+        }
+        
+        if (conteoData && todosLosRecursos.length > 0) {
+            // Mapear datos de la RPC al objeto de conteo
             const conteo = {};
-            favoritosCount.forEach(fav => {
-                conteo[fav.recurso_id] = (conteo[fav.recurso_id] || 0) + 1;
+            conteoData.forEach(item => {
+                conteo[item.recurso_id] = item.count;
             });
             
             // Actualizar el conteo en todosLosRecursos
