@@ -12,7 +12,7 @@ Una plataforma moderna y responsiva para la gestión de recursos educativos, dis
 ## Tech Stack
 - **Frontend:** HTML5, CSS3 (Variables modernas, Flexbox, Grid), JavaScript (ES6+).
 - **Backend as a Service:** Supabase (Auth & Database).
-- **Hosting:** Vercel.
+- **Hosting:** Vercel.app.
 
 ## Autor
 Desarrollado por **Esteban David**, programador autodidacto.
