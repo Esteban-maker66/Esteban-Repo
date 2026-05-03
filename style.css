@@ -133,8 +133,8 @@ header {
 }
 
 header h1 {
-    font-size: 1.7rem;
-    font-weight: 600;
+    font-size: 1rem;
+    font-weight: 400;
     margin: 0;
     text-shadow: rgba(0, 0, 0, 0.227) 0 0.1rem 0.3rem;
     display: flex;
@@ -897,12 +897,19 @@ input:checked + .slider:before {
 
 @media (max-width: 480px) {
     header {
-        padding: 0.75rem 1rem;
-        border-radius: 0 0 16px 16px;
+        padding: 0;
+        border-radius: 16px;
+        position: sticky;
+        top: 7px;
+        z-index: 100;
+        width: 96%;
+        border: 1px solid rgba(0, 0, 0, 0.1);
     }
 
     .header-main {
         gap: 0.75rem;
+        margin: 0 auto;
+        max-width: 100%;
     }
 
     .logo {
@@ -1008,8 +1015,8 @@ input:checked + .slider:before {
 }
 
 .recurso-card .recurso-titulo {
-    font-size: 1.1rem;
-    font-weight: 600;
+    font-size: 1.05rem;
+    font-weight: 400;
     color: var(--text);
     margin: 0;
     padding: 0;
@@ -1142,7 +1149,7 @@ input:checked + .slider:before {
     font-weight: 500;
     margin-bottom: 0.5rem;
     background: color-mix(in srgb, var(--background), transparent 40%);
-    border: 2px solid var(--border);
+    border: 1px solid rgba(0, 0, 0, 0.076);
     width: 100%;
 }
 
@@ -1709,7 +1716,7 @@ header.search-expanded {
 
 .seccion-header h2 {
     font-size: 1.4rem;
-    font-weight: 700;
+    font-weight: 400;
     padding: 0 0.5rem;
     color: var(--text);
     text-transform: capitalize;
@@ -2104,11 +2111,11 @@ header.search-expanded {
 
 .btn-comentarios-flotante {
     position: fixed;
-    bottom: 30px;
-    left: 30px;
+    bottom: 12px;
+    left: 12px;
     width: 60px;
     height: 60px;
-    border-radius: 40%;
+    border-radius: 40% 40% 40% 18%;
     background: color-mix(in srgb, var(--primary) , transparent 35%);
     backdrop-filter: blur(5px);
     -webkit-backdrop-filter: blur(5px);
@@ -2135,8 +2142,8 @@ header.search-expanded {
 
 @media (max-width: 768px) {
     .btn-comentarios-flotante {
-        bottom: 20px;
-        left: 20px;
+        bottom: 12px;
+        left: 12px;
         width: 50px;
         height: 50px;
         font-size: 1.2rem;
