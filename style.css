@@ -902,14 +902,34 @@ input:checked + .slider:before {
         position: sticky;
         top: 7px;
         z-index: 100;
-        width: 96%;
+        width: 97%;
         border: 1px solid rgba(0, 0, 0, 0.1);
     }
 
     .header-main {
         gap: 0.75rem;
         margin: 0 auto;
-        max-width: 100%;
+        max-width: 97%;
+    }
+
+    .header-main2 {
+        gap: 0.75rem;
+        margin: 0 auto;
+        max-width: 97%;  
+    }
+
+     .header-left {
+        justify-content: center;
+        gap: 0.5rem;
+    }
+
+     .header-center {
+        order: 0;
+        gap: 0.5rem;
+    }
+
+     .header-right {
+        justify-content: flex-end;
     }
 
     .logo {
@@ -1221,7 +1241,7 @@ input:checked + .slider:before {
     }
 
     .header-center.show-search {
-        display: block;
+        display: flex;
     }
 
     .search-container {

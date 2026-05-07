@@ -17,7 +17,9 @@ function gestionarPantalla(modoBusqueda) {
         if (secciones) secciones.style.display = 'none';
         if (resultados) resultados.style.display = 'grid';
         if (footer) footer.style.display = 'none';
-    } else {
+    } 
+    
+    else {
         if (secciones) secciones.style.display = 'block';
         if (resultados) resultados.style.display = 'none';
         if (footer) footer.style.display = 'block';
