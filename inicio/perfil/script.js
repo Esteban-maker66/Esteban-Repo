@@ -75,7 +75,7 @@ async function loginConGoogle() {
     const { error } = await supabaseClient.auth.signInWithOAuth({
         provider: 'google',
         options: {
-            redirectTo: window.location.origin + '/index.html'
+            redirectTo: window.location.origin + '/inicio/perfil/'
         }
     });
     if (error) alert("Error al conectar: " + error.message);
@@ -84,11 +84,7 @@ async function loginConGoogle() {
 async function logout() {
     await supabaseClient.auth.signOut();
     localStorage.removeItem('arrecife_session_id');
-    location.reload();
-}
-
-function actualizarInterfaz(session) {
-    const logOutDiv = document.getElementById('auth-logged-out');
+    window.location.href = '/inicio/';
     const logInDiv = document.getElementById('auth-logged-in');
 
     if (session) {

@@ -262,7 +262,7 @@ document.addEventListener('DOMContentLoaded', cargarPendientes);
 async function protegerAdmin() {
     const { data: { user } } = await supabaseClient.auth.getUser();
     if (!user || user.email !== 'e306711@gmail.com') {
-        window.location.href = 'index.html';
+        window.location.href = '../';
     }
 }
 
