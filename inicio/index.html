@@ -26,7 +26,7 @@
     <header>
         <div class="header-main">
             <div class="header-left">
-                <img src="../assets/logopng.webp" alt="Arrecife Digital Logo" class="logo">
+                <img src="../assets/logopng.webp" alt="Arrecife Digital Logo" class="logo" href="/inicio/">
                 <h1>Arrecife Digital</h1>
             </div>
             <div class="header-center">
@@ -43,7 +43,7 @@
                     <i class="fas fa-search"></i>
                 </button>
                 <nav class="top-nav">
-                    <button id="btn-inicio" onclick="location.reload()"><i class="fas fa-home"></i> Inicio</button>
+                    <button id="btn-inicio" onclick="window.location.href='/inicio/'"><i class="fas fa-home"></i> Inicio</button>
                     <div class="dropdown">
                         <button id="btn-categorias" class="dropdown-btn">
                             <i class="fas fa-list"></i> Categorías <i class="fas fa-chevron-down dropdown-arrow"></i>
@@ -82,10 +82,10 @@
                             </a>
                         </div>
                     </div>
-                    <button id="btn-Estante" onclick="window.location.href='estante/'"><i class="fas fa-bookmark"></i> Mi Estante</button>
-                    <button id="btn-Perfil" onclick="window.location.href='perfil/'"><i class="fas fa-user"></i> Perfil</button>
-                    <button id="btn-admin" onclick="window.location.href='admin/'" class="admin-nav"><i class="fas fa-cog"></i> Panel</button>
-                    <button id="btn-colaborar" onclick="window.location.href='agregar/'"><i class="fas fa-pen"></i> Colaborar</button>
+                    <button id="btn-Estante" onclick="window.location.href='/inicio/estante/'"><i class="fas fa-bookmark"></i> Mi Estante</button>
+                    <button id="btn-Perfil" onclick="window.location.href='/inicio/perfil/'"><i class="fas fa-user"></i> Perfil</button>
+                    <button id="btn-admin" onclick="window.location.href='/inicio/admin/'" class="admin-nav"><i class="fas fa-cog"></i> Panel</button>
+                    <button id="btn-colaborar" onclick="window.location.href='/inicio/agregar/'"><i class="fas fa-pen"></i> Colaborar</button>
                 </nav>
                 <button class="hamburger-btn" id="hamburger-btn">
                     <span class="hamburger-line"></span>
@@ -144,16 +144,16 @@
                         <hr class="dividor">
                     </div>
                 </div>
-                <a href="estante/" onclick="closeMobileMenu();">
+                <a href="/inicio/estante/" onclick="closeMobileMenu();">
                     <i class="fas fa-bookmark"></i> Mi Estante
                 </a>
-                <a href="perfil/" onclick="closeMobileMenu();">
+                <a href="/inicio/perfil/" onclick="closeMobileMenu();">
                     <i class="fas fa-user"></i> Perfil
                 </a>
-                <a href="admin/" onclick="closeMobileMenu();">
+                <a href="/inicio/admin/" onclick="closeMobileMenu();">
                     <i class="fas fa-cog"></i> Panel
                 </a>
-                <a href="agregar/" onclick="closeMobileMenu();">
+                <a href="/inicio/agregar/" onclick="closeMobileMenu();">
                     <i class="fas fa-pen"></i> Colaborar
                 </a>
             </nav>
@@ -213,10 +213,10 @@
         <div class="footer-section">
             <h3>Navegación</h3>
             <ul>
-                <li><a href="#" onclick="location.reload()">Inicio</a></li>
-                <li><a href="estante/" class="link">Mi Estante</a></li>
-                <li><a href="agregar/" class="link">Colaborar</a></li>
-                <li><a href="perfil/" class="link">Tu perfil</a></li>
+                <li><a href="/inicio/">Inicio</a></li>
+                <li><a href="/inicio/estante/" class="link">Mi Estante</a></li>
+                <li><a href="/inicio/agregar/" class="link">Colaborar</a></li>
+                <li><a href="/inicio/perfil/" class="link">Tu perfil</a></li>
             </ul>
         </div>
         <div class="footer-section">
