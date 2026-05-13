@@ -20,11 +20,5 @@
         }
       ]
     }
-  ],
-  "rewrites": [
-    {
-      "source": "/((?!api|assets|.*\\..*).*)",
-      "destination": "404.html"
-    }
   ]
 }
