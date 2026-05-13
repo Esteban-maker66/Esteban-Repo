@@ -85,21 +85,24 @@ async function logout() {
     await supabaseClient.auth.signOut();
     localStorage.removeItem('arrecife_session_id');
     window.location.href = '/inicio/';
-    const logInDiv = document.getElementById('auth-logged-in');
+}
 
-    if (session) {
+function actualizarInterfaz(session) {
+    const logInDiv = document.getElementById('auth-logged-out');
+    const logOutDiv = document.getElementById('auth-logged-in');
+
+    if (session && logOutDiv && logInDiv) {
+        logInDiv.style.display = 'none';
+        logOutDiv.style.display = 'block';
+
+        const user = session.user.user_metadata || {};
+        document.getElementById('user-avatar').src = user.avatar_url || '../../assets/logopng.webp';
+        document.getElementById('user-name').innerText = user.full_name || session.user.email || 'Usuario';
+        document.getElementById('user-email').innerText = session.user.email || '';
+
+        localStorage.setItem('arrecife_session_id', session.user.id);
+    } else if (logOutDiv && logInDiv) {
         logOutDiv.style.display = 'none';
         logInDiv.style.display = 'block';
-
-        const user = session.user.user_metadata;
-        document.getElementById('user-avatar').src = user.avatar_url;
-        document.getElementById('user-name').innerText = user.full_name;
-        document.getElementById('user-email').innerText = session.user.email;
-        
-        
-        localStorage.setItem('arrecife_session_id', session.user.id);
-    } else {
-        logOutDiv.style.display = 'block';
-        logInDiv.style.display = 'none';
     }
 }
